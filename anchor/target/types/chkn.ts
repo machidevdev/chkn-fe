@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/chkn.json`.
  */
 export type Chkn = {
-  "address": "AsjZ3kWAUSQRNt2pZVeJkywhZ6gpLpHZmJjduPmKZDZZ",
+  "address": "H2y6Xj5vhG3qBS9rRgjGCLZ1zv5ERSLZvU9dyDvCL2jH",
   "metadata": {
     "name": "chkn",
     "version": "0.1.0",
@@ -14,16 +14,16 @@ export type Chkn = {
   },
   "instructions": [
     {
-      "name": "close",
+      "name": "processPayment",
       "discriminator": [
-        98,
-        165,
-        201,
-        177,
-        108,
-        65,
-        206,
-        96
+        189,
+        81,
+        30,
+        198,
+        139,
+        186,
+        115,
+        23
       ],
       "accounts": [
         {
@@ -32,132 +32,76 @@ export type Chkn = {
           "signer": true
         },
         {
-          "name": "chkn",
+          "name": "receiver",
           "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "decrement",
-      "discriminator": [
-        106,
-        227,
-        168,
-        59,
-        248,
-        27,
-        150,
-        101
-      ],
-      "accounts": [
-        {
-          "name": "chkn",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "increment",
-      "discriminator": [
-        11,
-        18,
-        104,
-        9,
-        104,
-        174,
-        59,
-        33
-      ],
-      "accounts": [
-        {
-          "name": "chkn",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "initialize",
-      "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
-      ],
-      "accounts": [
-        {
-          "name": "payer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "chkn",
-          "writable": true,
-          "signer": true
         },
         {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
-    },
-    {
-      "name": "set",
-      "discriminator": [
-        198,
-        51,
-        53,
-        241,
-        116,
-        29,
-        126,
-        194
-      ],
-      "accounts": [
-        {
-          "name": "chkn",
-          "writable": true
-        }
-      ],
       "args": [
         {
-          "name": "value",
-          "type": "u8"
+          "name": "amount",
+          "type": "u64"
         }
       ]
     }
   ],
-  "accounts": [
+  "events": [
     {
-      "name": "chkn",
+      "name": "paymentEvent",
       "discriminator": [
-        255,
-        176,
-        4,
-        245,
-        188,
-        253,
-        124,
-        25
+        132,
+        136,
+        157,
+        119,
+        91,
+        254,
+        225,
+        20
       ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "insufficientFunds",
+      "msg": "Insufficient funds for transaction"
+    },
+    {
+      "code": 6001,
+      "name": "invalidAmount",
+      "msg": "Invalid payment amount"
+    },
+    {
+      "code": 6002,
+      "name": "transferFailed",
+      "msg": "Transfer failed"
+    },
+    {
+      "code": 6003,
+      "name": "notOwner",
+      "msg": "Not owner"
     }
   ],
   "types": [
     {
-      "name": "chkn",
+      "name": "paymentEvent",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "count",
-            "type": "u8"
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "payer",
+            "type": "pubkey"
+          },
+          {
+            "name": "receiver",
+            "type": "pubkey"
           }
         ]
       }

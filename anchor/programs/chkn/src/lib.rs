@@ -1,70 +1,98 @@
 #![allow(clippy::result_large_err)]
 
 use anchor_lang::prelude::*;
+use anchor_lang::system_program;
+use anchor_lang::solana_program::native_token::LAMPORTS_PER_SOL;
 
-declare_id!("AsjZ3kWAUSQRNt2pZVeJkywhZ6gpLpHZmJjduPmKZDZZ");
+declare_id!("H2y6Xj5vhG3qBS9rRgjGCLZ1zv5ERSLZvU9dyDvCL2jH");
 
 #[program]
 pub mod chkn {
     use super::*;
 
-  pub fn close(_ctx: Context<CloseChkn>) -> Result<()> {
-    Ok(())
-  }
+    const INDIVIDUAL_MONTHLY_PRICE: u64 = 1 * LAMPORTS_PER_SOL;
+    const INDIVIDUAL_YEARLY_PRICE: u64 = 10 * LAMPORTS_PER_SOL;
+    const GROUP_MONTHLY_PRICE: u64 = 5 * LAMPORTS_PER_SOL;
+    const GROUP_YEARLY_PRICE: u64 = 40 * LAMPORTS_PER_SOL;
+    const OWNER: Pubkey = pubkey!("88Va6RQojZNHx8VpurUz1tL6Ccaf5VpKZffATLFWRJBp");
 
-  pub fn decrement(ctx: Context<Update>) -> Result<()> {
-    ctx.accounts.chkn.count = ctx.accounts.chkn.count.checked_sub(1).unwrap();
-    Ok(())
-  }
 
-  pub fn increment(ctx: Context<Update>) -> Result<()> {
-    ctx.accounts.chkn.count = ctx.accounts.chkn.count.checked_add(1).unwrap();
-    Ok(())
-  }
 
-  pub fn initialize(_ctx: Context<InitializeChkn>) -> Result<()> {
-    Ok(())
-  }
 
-  pub fn set(ctx: Context<Update>, value: u8) -> Result<()> {
-    ctx.accounts.chkn.count = value.clone();
-    Ok(())
-  }
+    pub fn process_payment(
+        ctx: Context<ProcessPayment>,
+        amount: u64,
+    ) -> Result<()> {
+        // Validate payment amount
+        require!(
+            amount == INDIVIDUAL_MONTHLY_PRICE ||
+            amount == INDIVIDUAL_YEARLY_PRICE ||
+            amount == GROUP_MONTHLY_PRICE ||
+            amount == GROUP_YEARLY_PRICE,
+            ErrorCode::InvalidAmount
+        );
+
+        require!(
+            ctx.accounts.receiver.key() == OWNER,
+            ErrorCode::NotOwner
+        );
+
+        //transfer the amount from the payer to the owner
+        let cpi = CpiContext::new(ctx.accounts.system_program.to_account_info(),
+            system_program::Transfer {
+                from: ctx.accounts.payer.to_account_info(),
+                to: ctx.accounts.receiver.to_account_info()
+            }
+        );
+
+        let res = system_program::transfer(cpi, amount);
+        msg!("Transfer result: {:?}", res);
+        if res.is_ok() {
+            msg!("Transfer successful, about to emit event");
+            emit!(PaymentEvent {
+                amount,
+                payer: ctx.accounts.payer.key(),
+                receiver: ctx.accounts.receiver.key(),
+            });
+            msg!("Event emitted successfully");
+            return Ok(());
+        } else {
+            return Err(ErrorCode::TransferFailed.into());
+        }
+    }
+
+
+ 
 }
 
 #[derive(Accounts)]
-pub struct InitializeChkn<'info> {
-  #[account(mut)]
-  pub payer: Signer<'info>,
+pub struct ProcessPayment<'info> {
+    #[account(mut)]
+    payer: Signer<'info>,
 
-  #[account(
-  init,
-  space = 8 + Chkn::INIT_SPACE,
-  payer = payer
-  )]
-  pub chkn: Account<'info, Chkn>,
-  pub system_program: Program<'info, System>,
-}
-#[derive(Accounts)]
-pub struct CloseChkn<'info> {
-  #[account(mut)]
-  pub payer: Signer<'info>,
+    /// CHECK: This is the receiver account. will always be the owner
+    #[account(mut)]
+    receiver: AccountInfo<'info>,
 
-  #[account(
-  mut,
-  close = payer, // close account and return lamports to payer
-  )]
-  pub chkn: Account<'info, Chkn>,
+    system_program: Program<'info, System>,
 }
 
-#[derive(Accounts)]
-pub struct Update<'info> {
-  #[account(mut)]
-  pub chkn: Account<'info, Chkn>,
+
+#[error_code]
+pub enum ErrorCode {
+    #[msg("Insufficient funds for transaction")]
+    InsufficientFunds,
+    #[msg("Invalid payment amount")]
+    InvalidAmount,
+    #[msg("Transfer failed")]
+    TransferFailed,
+    #[msg("Not owner")]
+    NotOwner,
 }
 
-#[account]
-#[derive(InitSpace)]
-pub struct Chkn {
-  count: u8,
+#[event]
+pub struct PaymentEvent {
+    amount: u64,
+    payer: Pubkey,
+    receiver: Pubkey,
 }

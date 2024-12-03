@@ -1,76 +1,77 @@
 import * as anchor from '@coral-xyz/anchor'
 import {Program} from '@coral-xyz/anchor'
-import {Keypair} from '@solana/web3.js'
-import {Chkn} from '../target/types/chkn'
+import {Keypair, LAMPORTS_PER_SOL, PublicKey} from '@solana/web3.js'
+import { Chkn } from '../target/types/chkn'
 
+
+
+//this is all wrong
 describe('chkn', () => {
-  // Configure the client to use the local cluster.
   const provider = anchor.AnchorProvider.env()
   anchor.setProvider(provider)
   const payer = provider.wallet as anchor.Wallet
-
   const program = anchor.workspace.Chkn as Program<Chkn>
-
   const chknKeypair = Keypair.generate()
+  const owner = new PublicKey('88Va6RQojZNHx8VpurUz1tL6Ccaf5VpKZffATLFWRJBp');
 
-  it('Initialize Chkn', async () => {
-    await program.methods
-      .initialize()
-      .accounts({
-        chkn: chknKeypair.publicKey,
+  (async () => {
+    await provider.connection.requestAirdrop(payer.publicKey, 15 * LAMPORTS_PER_SOL)
+  })().then(() => {
+    console.log('Airdropped 15 sol to chkn keypair')
+   })
+
+  it('insufficient funds', async () => {
+    try {
+      await program.methods.processPayment(new anchor.BN(150)).accounts({
+      receiver: owner,
+      payer: chknKeypair.publicKey,
+      })
+      .signers([payer.payer])
+      .rpc()
+    } catch (e) {
+      e instanceof anchor.AnchorError && expect(e.error.errorCode.code).toBe('InvalidAmount')
+    }
+  })
+
+  it('wrong receiver', async () => {
+    try {
+      await program.methods.processPayment(new anchor.BN(10)).accounts({
+        receiver: payer.publicKey,
         payer: payer.publicKey,
       })
-      .signers([chknKeypair])
+      .signers([payer.payer])
       .rpc()
-
-    const currentCount = await program.account.chkn.fetch(chknKeypair.publicKey)
-
-    expect(currentCount.count).toEqual(0)
+    } catch (e) {
+      e instanceof anchor.AnchorError && expect(e.error.errorCode.code).toBe('InvalidReceiver')
+    }
   })
 
-  it('Increment Chkn', async () => {
-    await program.methods.increment().accounts({ chkn: chknKeypair.publicKey }).rpc()
-
-    const currentCount = await program.account.chkn.fetch(chknKeypair.publicKey)
-
-    expect(currentCount.count).toEqual(1)
-  })
-
-  it('Increment Chkn Again', async () => {
-    await program.methods.increment().accounts({ chkn: chknKeypair.publicKey }).rpc()
-
-    const currentCount = await program.account.chkn.fetch(chknKeypair.publicKey)
-
-    expect(currentCount.count).toEqual(2)
-  })
-
-  it('Decrement Chkn', async () => {
-    await program.methods.decrement().accounts({ chkn: chknKeypair.publicKey }).rpc()
-
-    const currentCount = await program.account.chkn.fetch(chknKeypair.publicKey)
-
-    expect(currentCount.count).toEqual(1)
-  })
-
-  it('Set chkn value', async () => {
-    await program.methods.set(42).accounts({ chkn: chknKeypair.publicKey }).rpc()
-
-    const currentCount = await program.account.chkn.fetch(chknKeypair.publicKey)
-
-    expect(currentCount.count).toEqual(42)
-  })
-
-  it('Set close the chkn account', async () => {
-    await program.methods
-      .close()
-      .accounts({
+  it('correct payment', async () => {
+    try {
+      const tx = await program.methods.processPayment(new anchor.BN(1)).accounts({
+        receiver: owner,
         payer: payer.publicKey,
-        chkn: chknKeypair.publicKey,
-      })
-      .rpc()
-
-    // The account should no longer exist, returning null.
-    const userAccount = await program.account.chkn.fetchNullable(chknKeypair.publicKey)
-    expect(userAccount).toBeNull()
+      }).signers([payer.payer]).rpc()
+      console.log(tx)
+    } catch (e) {
+      fail(e)
+    }
   })
+  it('logs correctly', async () => {
+
+    const listener = program.addEventListener('paymentEvent', (event, slot) => {
+      console.log(`${event} at slot ${slot}`)
+    })
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    try {
+      const tx = await program.methods.processPayment(new anchor.BN(1)).accounts({
+        receiver: owner,
+        payer: payer.publicKey,
+      }).signers([payer.payer]).rpc()
+    } catch (e) {
+      fail(e)
+    }
+    program.removeEventListener(listener)
+  })
+
 })
