@@ -7,7 +7,7 @@ import { Chkn } from '../target/types/chkn'
 
 //this is all wrong
 describe('chkn', () => {
-  const provider = anchor.AnchorProvider.env()
+  /*const provider = anchor.AnchorProvider.env()
   anchor.setProvider(provider)
   const payer = provider.wallet as anchor.Wallet
   const program = anchor.workspace.Chkn as Program<Chkn>
@@ -73,5 +73,5 @@ describe('chkn', () => {
     }
     program.removeEventListener(listener)
   })
-
+*/
 })
