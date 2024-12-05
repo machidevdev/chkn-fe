@@ -1,7 +1,7 @@
 'use client'
 
 import { useWallet } from '@solana/wallet-adapter-react'
-import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
+import { lamports, Address, } from '@solana/web3.js'
 import { IconRefresh } from '@tabler/icons-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
@@ -16,7 +16,7 @@ import {
   useTransferSol,
 } from './account-data-access'
 
-export function AccountBalance({ address }: { address: PublicKey }) {
+export function AccountBalance({ address }: { address: Address }) {
   const query = useGetBalance({ address })
 
   return (
@@ -34,7 +34,7 @@ export function AccountChecker() {
   }
   return <AccountBalanceCheck address={publicKey} />
 }
-export function AccountBalanceCheck({ address }: { address: PublicKey }) {
+export function AccountBalanceCheck({ address }: { address: Address }) {
   const { cluster } = useCluster()
   const mutation = useRequestAirdrop({ address })
   const query = useGetBalance({ address })
