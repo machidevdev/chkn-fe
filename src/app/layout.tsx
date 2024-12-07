@@ -13,6 +13,8 @@ const links: { label: string; path: string }[] = [
   { label: 'Account', path: '/account' },
   { label: 'Clusters', path: '/clusters' },
   { label: 'Payments', path: '/payment' },
+  { label: 'Subscription', path: '/subscription' },
+  { label: 'Link', path: '/link' },
 ];
 
 export default function RootLayout({
@@ -22,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="dark">
         <ReactQueryProvider>
           <ClusterProvider>
             <SolanaProvider>

@@ -11,7 +11,7 @@ import IDL from '../../../anchor/target/idl/chkn.json';
 import * as anchor from '@coral-xyz/anchor';
 
 const RECEIVER_WALLET = new PublicKey(
-  '88Va6RQojZNHx8VpurUz1tL6Ccaf5VpKZffATLFWRJBp'
+  'J9VEDmCXRM6zZF2DEazGrghSfZoVYMG6P219XjstfAP1'
 );
 
 export function usePaymentProgram() {
