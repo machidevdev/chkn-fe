@@ -8,11 +8,17 @@ skip-lint = false
 [programs.localnet]
 chkn = "D2eQFf8orcDx2W4oKkGSJUSbQ2fqSQEdFkpGQPCLZ64Y"
 
+[programs.devnet]
+chkn = "H2y6Xj5vhG3qBS9rRgjGCLZ1zv5ERSLZvU9dyDvCL2jH"
+
+[programs.mainnet]
+chkn = "H2y6Xj5vhG3qBS9rRgjGCLZ1zv5ERSLZvU9dyDvCL2jH"
+
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

@@ -23,6 +23,12 @@ pub mod chkn {
         ctx: Context<ProcessPayment>,
         amount: u64,
     ) -> Result<()> {
+        //check if the payer has enough balance
+        let payer_balance = ctx.accounts.payer.lamports();
+        require!(payer_balance >= amount, ErrorCode::InsufficientFunds);
+
+
+
         // Validate payment amount
         require!(
             amount == INDIVIDUAL_MONTHLY_PRICE ||
@@ -45,20 +51,13 @@ pub mod chkn {
             }
         );
 
-        let res = system_program::transfer(cpi, amount);
-        msg!("Transfer result: {:?}", res);
-        if res.is_ok() {
-            msg!("Transfer successful, about to emit event");
-            emit!(PaymentEvent {
-                amount,
-                payer: ctx.accounts.payer.key(),
-                receiver: ctx.accounts.receiver.key(),
-            });
-            msg!("Event emitted successfully");
-            return Ok(());
-        } else {
-            return Err(ErrorCode::TransferFailed.into());
-        }
+        system_program::transfer(cpi, amount)?;
+        emit!(PaymentEvent {
+            amount,
+            payer: ctx.accounts.payer.key(),
+            receiver: ctx.accounts.receiver.key(),
+        });
+        Ok(())
     }
 
 
