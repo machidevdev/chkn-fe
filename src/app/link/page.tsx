@@ -1,19 +1,5 @@
 'use client';
-/*(method) ResponseUtil.success<{
-    otp: {
-        telegramId: string;
-        createdAt: Date;
-        code: string;
-        expiresAt: Date;
-    };
-}>(data: {
-    otp: {
-        telegramId: string;
-        createdAt: Date;
-        code: string;
-        expiresAt: Date;
-    };
-*/
+
 import { Button } from '@/components/ui/button';
 import {
   InputOTP,
@@ -25,7 +11,7 @@ import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtom, atom } from 'jotai';
 import { useEffect, useState } from 'react';
-const endpoint = 'https://chkn-indexer-production.up.railway.app/';
+const endpoint = 'https://chkn-indexer-production.up.railway.app/api';
 const otpAtom = atom<string>('');
 const signatureAtom = atom<string | null>(null);
 
