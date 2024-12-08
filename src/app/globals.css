@@ -20,13 +20,13 @@ body {
 @layer base {
   :root {
     /* Light Theme */
-    --background: 0 0% 3.9%; /* Almost Black: #0A0A0A */
+    --background: 
     --foreground: 0 0% 3.9%; /* Almost Black: #0A0A0A */
-    --card: 0 0% 100%; /* Pure White: #FFFFFF */
+    --card: 272 33% 5%; /* Dark Purple: #0A0A0F */
     --card-foreground: 0 0% 3.9%; /* Almost Black: #0A0A0A */
     --popover: 0 0% 100%; /* Pure White: #FFFFFF */
     --popover-foreground: 0 0% 3.9%; /* Almost Black: #0A0A0A */
-    --primary: 0 0% 9%; /* Dark Gray: #171717 */
+    --primary: 293 98% 76%; /* Pink: #f087fe */
     --primary-foreground: 0 0% 98%; /* Off White: #FAFAFA */
     --secondary: 0 0% 96.1%; /* Light Gray: #F5F5F5 */
     --secondary-foreground: 0 0% 9%; /* Dark Gray: #171717 */
@@ -36,7 +36,7 @@ body {
     --accent-foreground: 0 0% 9%; /* Dark Gray: #171717 */
     --destructive: 0 84.2% 60.2%; /* Red: #EF4444 */
     --destructive-foreground: 0 0% 98%; /* Off White: #FAFAFA */
-    --border: 0 0% 89.8%; /* Light Gray: #E5E5E5 */
+    --border: 240 14% 29%; /* Light Gray: #3D4157 */
     --input: 0 0% 89.8%; /* Light Gray: #E5E5E5 */
     --ring: 0 0% 3.9%; /* Almost Black: #0A0A0A */
 
@@ -51,13 +51,20 @@ body {
   }
   .dark {
     /* Dark Theme */
-    --background: 0 0% 3.9%; /* Almost Black: #0A0A0A */
+    --background: radial-gradient(
+        190.02% 240.85% at 103.67% -90.02%,
+        #412463 30.88%,
+        #1e1e1e 53.64%,
+        #151722 100%
+      )
+      /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */; /* Almost Black: #0A0A0A */
     --foreground: 0 0% 98%; /* Off White: #FAFAFA */
-    --card: 0 0% 3.9%; /* Almost Black: #0A0A0A */
+    --card: 253, 20%, 17%; /* Dark Purple: #0A0A0F */
     --card-foreground: 0 0% 98%; /* Off White: #FAFAFA */
     --popover: 0 0% 3.9%; /* Almost Black: #0A0A0A */
     --popover-foreground: 0 0% 98%; /* Off White: #FAFAFA */
-    --primary: 0 0% 98%; /* Off White: #FAFAFA */
+    --primary: 293 98% 76%; /* Pink: #f087fe */
+
     --primary-foreground: 0 0% 9%; /* Dark Gray: #171717 */
     --secondary: 0 0% 14.9%; /* Very Dark Gray: #262626 */
     --secondary-foreground: 0 0% 98%; /* Off White: #FAFAFA */
@@ -67,7 +74,7 @@ body {
     --accent-foreground: 0 0% 98%; /* Off White: #FAFAFA */
     --destructive: 0 62.8% 30.6%; /* Dark Red: #991B1B */
     --destructive-foreground: 0 0% 98%; /* Off White: #FAFAFA */
-    --border: 0 0% 14.9%; /* Very Dark Gray: #262626 */
+    --border: 240 14% 29%; /* Light Gray: #3D4157 */
     --input: 0 0% 14.9%; /* Very Dark Gray: #262626 */
     --ring: 0 0% 83.1%; /* Light Gray: #D4D4D4 */
 
@@ -84,6 +91,12 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    background: radial-gradient(
+      190.02% 240.85% at 103.67% -90.02%,
+      #412463 30.88%,
+      #1e1e1e 53.64%,
+      #151722 100%
+    );
+    @apply text-foreground;
   }
 }

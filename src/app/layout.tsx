@@ -3,6 +3,7 @@ import { ClusterProvider } from '@/components/cluster/cluster-data-access';
 import { SolanaProvider } from '@/components/solana/solana-provider';
 import { UiLayout } from '@/components/ui/ui-layout';
 import { ReactQueryProvider } from './react-query-provider';
+import Image from 'next/image';
 
 export const metadata = {
   title: 'chkn',

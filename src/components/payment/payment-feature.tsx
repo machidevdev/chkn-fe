@@ -3,21 +3,27 @@
 import { FC, useEffect, useState } from 'react';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardDescription, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { usePaymentProgram } from './payment-data-access';
 import IDL from '../../../anchor/target/idl/chkn.json';
 import { Idl, Program, EventParser } from '@coral-xyz/anchor';
 import { useAnchorProvider } from '../solana/solana-provider';
+import { inter, jetBrainsMono } from '@/lib/fonts';
 
 const subscriptionTypes = [
   {
     name: 'Individual Monthly',
-    amount: 0.1,
+    amount: 1,
     price: '0.1 SOL',
     interval: 'month',
   },
   { name: 'Individual Yearly', amount: 1, price: '1 SOL', interval: 'year' },
-  { name: 'Group Monthly', amount: 0.5, price: '0.5 SOL', interval: 'month' },
+  { name: 'Group Monthly', amount: 2, price: '2 SOL', interval: 'month' },
   { name: 'Group Yearly', amount: 4, price: '4 SOL', interval: 'year' },
 ];
 
@@ -38,16 +44,30 @@ const PaymentCard: FC<{ type: (typeof subscriptionTypes)[number] }> = ({
   type,
 }) => {
   return (
-    <Card key={type.name} className="p-6">
-      <CardTitle>{type.name}</CardTitle>
+    <Card key={type.name} className="p-6 flex flex-col ">
+      <CardHeader>{type.name}</CardHeader>
       <CardDescription>
-        <div className="flex flex-row justify-between items-baseline">
+        <div className="flex flex-row items-center gap-2.5">
           <p className="text-sm text-muted-foreground">
-            <span className="text-3xl text-primary font-bold">
-              {type.amount} SOL
+            <span
+              className={`text-7xl text-white font-medium tracking-tighter ${jetBrainsMono.className}`}
+            >
+              {type.amount}
             </span>
           </p>
-          <div className="text-sm text-muted-foreground">{type.interval}</div>
+          <div
+            className={`${jetBrainsMono.className} flex flex-col  justify-start`}
+          >
+            <div className="text-sm text-muted-foreground">SOL</div>
+            <div className="text-sm text-muted-foreground">
+              /{type.interval}
+            </div>
+          </div>
+        </div>
+        <div
+          className={`${jetBrainsMono.className} flex flex-col gap-1 text-white`}
+        >
+          Features:
         </div>
       </CardDescription>
       <SubscribeButton amount={type.amount} />
@@ -92,13 +112,15 @@ export const PaymentFeature: FC = () => {
   }, [connection, provider]);
 
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-4xl font-bold mb-8">Subscription Payments</h1>
+    <div className="p-8 flex flex-col w-screen">
+      <h1 className={`text-4xl  mb-8 text-center ${inter.className}`}>
+        Subscription Payments
+      </h1>
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold">Contract Balance</h2>
-        <p className="text-xl">{ownerBalance.toFixed(2)} SOL</p>
+        <h2 className="text-2xl font-semibold text-center">Contract Balance</h2>
+        <p className="text-xl text-center">{ownerBalance.toFixed(2)} SOL</p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
         {subscriptionTypes.map((type) => (
           <PaymentCard key={type.name} type={type} />
         ))}
