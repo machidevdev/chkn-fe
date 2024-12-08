@@ -134,11 +134,12 @@ export const SubscriptionStatus = () => {
     const fetchSubscriptions = async () => {
       if (wallet.publicKey) {
         const data = await fetch(
-          'https://chkn-indexer-production.up.railway.app/subscription/' +
+          'https://chkn-indexer-production.up.railway.app/api/subscription/' +
             wallet.publicKey.toString()
         );
         const json = await data.json();
-        setSubscriptions(json);
+        console.log(json);
+        setSubscriptions(json.data);
       }
     };
 
