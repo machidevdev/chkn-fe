@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  height: 100%;
-}
-
 .wallet-adapter-button-trigger {
   background: rgb(100, 26, 230) !important; /* Purple */
   border-radius: 8px !important;
@@ -20,7 +15,13 @@ body {
 @layer base {
   :root {
     /* Light Theme */
-    --background: 
+    --bg-tile: url('/tile.png');
+    --background: radial-gradient(
+      190.02% 240.85% at 103.67% -90.02%,
+      #412463 30.88%,
+      #1e1e1e 53.64%,
+      #151722 100%
+    );
     --foreground: 0 0% 3.9%; /* Almost Black: #0A0A0A */
     --card: 272 33% 5%; /* Dark Purple: #0A0A0F */
     --card-foreground: 0 0% 3.9%; /* Almost Black: #0A0A0A */
@@ -51,13 +52,14 @@ body {
   }
   .dark {
     /* Dark Theme */
+    --bg-tile: url('/tile.png');
     --background: radial-gradient(
-        190.02% 240.85% at 103.67% -90.02%,
-        #412463 30.88%,
-        #1e1e1e 53.64%,
-        #151722 100%
-      )
-      /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */; /* Almost Black: #0A0A0A */
+      190.02% 240.85% at 103.67% -90.02%,
+      #412463 30.88%,
+      #1e1e1e 53.64%,
+      #151722 100%
+    );
+    /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */ /* Almost Black: #0A0A0A */
     --foreground: 0 0% 98%; /* Off White: #FAFAFA */
     --card: 253, 20%, 17%; /* Dark Purple: #0A0A0F */
     --card-foreground: 0 0% 98%; /* Off White: #FAFAFA */
@@ -91,12 +93,13 @@ body {
     @apply border-border;
   }
   body {
-    background: radial-gradient(
-      190.02% 240.85% at 103.67% -90.02%,
-      #412463 30.88%,
-      #1e1e1e 53.64%,
-      #151722 100%
-    );
+    background-image: var(--background);
     @apply text-foreground;
   }
+}
+
+.bg-tile {
+  background-image: var(--bg-tile);
+  background-repeat: repeat;
+  background-size: 100px auto;
 }
