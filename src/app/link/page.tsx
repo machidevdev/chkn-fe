@@ -120,7 +120,7 @@ export default function Link() {
   }, [wallet.publicKey]);
 
   return (
-    <div className="flex flex-col gap-6 mt-40 container mx-auto">
+    <div className="flex flex-col gap-6 mt-40 w-2/3 mx-auto">
       <h1 className="text-2xl font-bold">Link your wallet</h1>
       {wallet.publicKey && (
         <>
