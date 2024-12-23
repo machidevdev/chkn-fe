@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Otp {
+  code       String   @id @unique @db.Char(6)
+  telegramId String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  @@index([code])
+  @@index([telegramId])
+}
+
+model Payment {
+  address   String   @db.VarChar(44)
+  txHash    String   @id @db.VarChar(88)
+  createdAt DateTime @default(now())
+  amount    Decimal
+  User      User     @relation(fields: [address], references: [address])
+}
+
+model Subscription {
+  id        Int      @id @default(autoincrement())
+  address   String   @db.VarChar(44)
+  txHash    String   @db.VarChar(88)
+  type      String   @db.VarChar(10)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  User      User     @relation(fields: [address], references: [address])
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  address      String         @unique @db.VarChar(44)
+  telegramId   String?        @unique
+  credits      Int            @default(0)
+  createdAt    DateTime       @default(now())
+  Payment      Payment[]
+  Subscription Subscription[]
+}

@@ -1,5 +1,6 @@
 import { JetBrains_Mono } from 'next/font/google';
 import { Inter } from 'next/font/google';
+import { Chakra_Petch } from 'next/font/google';
 
 export const jetBrainsMono = JetBrains_Mono({
   subsets: ['latin'],
@@ -10,3 +11,7 @@ export const inter = Inter({
   subsets: ['latin'],
 });
 
+export const chakraPetch = Chakra_Petch({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+});

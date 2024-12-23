@@ -5,6 +5,17 @@ import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { ReactNode, Suspense, useEffect, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+  NavigationMenuViewport,
+} from '@/components/ui/navigation-menu';
 
 import { AccountChecker } from '../account/account-ui';
 import {
@@ -13,45 +24,16 @@ import {
   ExplorerLink,
 } from '../cluster/cluster-ui';
 import { WalletButton } from '../solana/solana-provider';
+import Navbar from '../Navbar';
 
-export function UiLayout({
-  children,
-  links,
-}: {
-  children: ReactNode;
-  links: { label: string; path: string }[];
-}) {
+export function UiLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col mx-auto">
+      <Navbar />
+
       <div className="min-h-screen  bg-tile">
-        <div className="navbar background-blur-sm text-neutral-content flex-col md:flex-row space-y-2 md:space-y-0">
-          <div className="flex-1">
-            <Link className="btn btn-ghost normal-case text-xl" href="/">
-              <img className="h-4 md:h-6" alt="Logo" src="/logo.png" />
-            </Link>
-            <ul className="menu menu-horizontal px-1 space-x-2">
-              {links.map(({ label, path }) => (
-                <li key={path}>
-                  <Link
-                    className={pathname.startsWith(path) ? 'active' : ''}
-                    href={path}
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex-none space-x-2">
-            <WalletButton />
-            <ClusterUiSelect />
-          </div>
-        </div>
-        <ClusterChecker>
-          <AccountChecker />
-        </ClusterChecker>
         <div className="flex-grow mx-4 lg:mx-auto">
           <Suspense
             fallback={

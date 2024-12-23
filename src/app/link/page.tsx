@@ -45,9 +45,17 @@ const SubmitButton = () => {
       alert('Please connect your wallet');
       return;
     }
-    const message = new TextEncoder().encode(otp);
+
+    const messageText = [
+      'Verify account ownership',
+      `address: ${wallet.publicKey.toString()}`,
+      `otp: ${otp}`,
+    ].join('\n');
+
+    const message = new TextEncoder().encode(messageText);
     const signature = await wallet.signMessage(message);
     setSignature(bs58.encode(signature));
+
     try {
       const response = await fetch(`${endpoint}/otp/verify`, {
         method: 'POST',
@@ -58,6 +66,7 @@ const SubmitButton = () => {
           code: otp,
           signedMessage: bs58.encode(signature),
           pubKey: wallet.publicKey?.toString(),
+          message: messageText,
         }),
       });
       const data = await response.json();
@@ -120,31 +129,35 @@ export default function Link() {
   }, [wallet.publicKey]);
 
   return (
-    <div className="flex flex-col gap-6 mt-40 w-2/3 mx-auto">
-      <h1 className="text-2xl font-bold">Link your wallet</h1>
-      {wallet.publicKey && (
-        <>
-          <div className="text-sm text-muted-foreground">
-            <div>Telegram ID:</div>
-            <div>{telegramId ? telegramId : 'No telegram ID'}</div>
-            <div>public key: {wallet.publicKey.toString()}</div>
+    <div className="container mx-auto p-8">
+      <h1 className="text-4xl font-bold mb-8">Link your wallet</h1>
+      <div className="max-w-xl mx-auto">
+        <div className=" flex flex-col justify-center gap-y-8 mt-40">
+          {wallet.publicKey && (
+            <>
+              <div className="text-sm text-muted-foreground">
+                <div>Telegram ID:</div>
+                <div>{telegramId ? telegramId : 'No telegram ID'}</div>
+                <div>public key: {wallet.publicKey.toString()}</div>
+              </div>
+            </>
+          )}
+          <h2 className="text-sm text-muted-foreground">
+            Generate an OTP to link your wallet, then submit it to verify your
+            account.
+          </h2>
+          <div className="flex justify-center">
+            <OtpField />
           </div>
-        </>
-      )}
-      <h2 className="text-sm text-muted-foreground">
-        Generate an OTP to link your wallet, then submit it to verify your
-        account.
-      </h2>
-      <div className="flex justify-center">
-        <OtpField />
-      </div>
-      <div className="flex gap-4">
-        <OtpButton />
-        <SubmitButton />
-      </div>
-      <div className="text-sm text-muted-foreground">
-        <div>Signature:</div>
-        <div>{signature ? signature : 'No signature'}</div>
+          <div className="flex gap-4">
+            <OtpButton />
+            <SubmitButton />
+          </div>
+          <div className="text-sm text-muted-foreground">
+            <div>Signature:</div>
+            <div>{signature ? signature : 'No signature'}</div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -55,8 +55,14 @@ const config: Config = {
   				'5': 'hsl(var(--chart-5))'
   			}
 			},
+			navbar: {
+				bg: 'hsl(var(--navbar-bg))',
+			},
 			backgroundImage: {
 				'tile': 'url("/tile.png")',
+			},
+			backgroundColor: {
+				'navbar-bg': '#0D0F17',
 			}
   	}
   },

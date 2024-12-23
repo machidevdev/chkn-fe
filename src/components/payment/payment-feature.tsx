@@ -18,13 +18,13 @@ import { inter, jetBrainsMono } from '@/lib/fonts';
 const subscriptionTypes = [
   {
     name: 'Individual Monthly',
-    amount: 1,
+    amount: 0.1,
     price: '0.1 SOL',
     interval: 'month',
   },
-  { name: 'Individual Yearly', amount: 1, price: '1 SOL', interval: 'year' },
-  { name: 'Group Monthly', amount: 2, price: '2 SOL', interval: 'month' },
-  { name: 'Group Yearly', amount: 4, price: '4 SOL', interval: 'year' },
+  { name: 'Individual Yearly', amount: 10, price: '1 SOL', interval: 'year' },
+  { name: 'Group Monthly', amount: 5, price: '2 SOL', interval: 'month' },
+  { name: 'Group Yearly', amount: 20, price: '4 SOL', interval: 'year' },
 ];
 
 const SubscribeButton = ({ amount }: { amount: number }) => {
@@ -112,7 +112,7 @@ export const PaymentFeature: FC = () => {
   }, [connection, provider]);
 
   return (
-    <div className="p-8 flex flex-col w-screen">
+    <div className="p-8 flex flex-col w-full">
       <h1 className={`text-4xl  mb-8 text-center ${inter.className}`}>
         Subscription Payments
       </h1>

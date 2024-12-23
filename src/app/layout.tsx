@@ -3,7 +3,6 @@ import { ClusterProvider } from '@/components/cluster/cluster-data-access';
 import { SolanaProvider } from '@/components/solana/solana-provider';
 import { UiLayout } from '@/components/ui/ui-layout';
 import { ReactQueryProvider } from './react-query-provider';
-import Image from 'next/image';
 
 export const metadata = {
   title: 'chkn',
@@ -25,11 +24,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="dark">
+      <body className="dark ">
         <ReactQueryProvider>
           <ClusterProvider>
             <SolanaProvider>
-              <UiLayout links={links}>{children}</UiLayout>
+              <UiLayout>{children}</UiLayout>
             </SolanaProvider>
           </ClusterProvider>
         </ReactQueryProvider>
