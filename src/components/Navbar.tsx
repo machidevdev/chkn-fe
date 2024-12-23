@@ -1,12 +1,12 @@
 import Image from 'next/image';
 import { chakraPetch, inter, jetBrainsMono } from '@/lib/fonts';
-import { Button } from './ui/button';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { AccountIcon } from './icons/AccountIcon';
 import { RefreshIcon } from './icons/RefreshIcon';
 import { LinkIcon } from './icons/LinkIcon';
+import { ConnectButton } from './solana/connect-button';
 
 const navItems = [
   { label: 'Account', path: '/account', icon: AccountIcon },
@@ -29,9 +29,7 @@ export default function Navbar() {
 
         <div className={`flex gap-x-4 items-center ${jetBrainsMono.className}`}>
           <div className="font-bold">Docs</div>
-          <Button variant="default" className="font-bold uppercase">
-            Connect Wallet
-          </Button>
+          <ConnectButton />
         </div>
       </div>
       <div className={`max-w-7xl mx-auto w-full flex gap-x-4`}>

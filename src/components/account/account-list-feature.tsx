@@ -4,6 +4,7 @@ import { WalletButton } from '../solana/solana-provider';
 import { jetBrainsMono } from '@/lib/fonts';
 import { useQuery } from '@tanstack/react-query';
 import { UserWithSubscription } from '@/lib/types';
+import { useAccount } from '@/hooks/useAccount';
 
 const AccountHeader = () => {
   return (
@@ -42,12 +43,8 @@ const Telegram = ({ user }: { user?: UserWithSubscription }) => {
     },
   });
 
-  if (!publicKey)
-    return (
-      <p className={`text-sm text-muted-foreground ${jetBrainsMono.className}`}>
-        Connect your wallet first
-      </p>
-    );
+  if (!publicKey) return null;
+
   if (isLoading)
     return (
       <p className={`text-sm text-muted-foreground ${jetBrainsMono.className}`}>
@@ -133,14 +130,7 @@ const Subscription = ({ user }: { user?: UserWithSubscription }) => {
 
 export default function AccountListFeature() {
   const { publicKey } = useWallet();
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['user', publicKey?.toBase58()],
-    enabled: !!publicKey,
-    queryFn: async () => {
-      const res = await fetch(`/api/user?address=${publicKey?.toBase58()}`);
-      return res.json();
-    },
-  });
+  const { data } = useAccount(publicKey);
   return (
     <div className="max-w-7xl w-full mx-auto flex flex-col gap-4">
       <AccountHeader />

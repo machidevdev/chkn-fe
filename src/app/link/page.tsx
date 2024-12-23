@@ -1,5 +1,6 @@
 'use client';
 
+import { WalletButton } from '@/components/solana/solana-provider';
 import { Button } from '@/components/ui/button';
 import {
   InputOTP,
@@ -7,8 +8,12 @@ import {
   InputOTPSlot,
   InputOTPSeparator,
 } from '@/components/ui/input-otp';
+import { useAccount } from '@/hooks/useAccount';
+import { jetBrainsMono } from '@/lib/fonts';
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { WalletConnectButton } from '@solana/wallet-adapter-react-ui';
+import { useQuery } from '@tanstack/react-query';
 import { useAtom, atom } from 'jotai';
 import { useEffect, useState } from 'react';
 const endpoint = 'https://chkn-indexer-production.up.railway.app/api';
@@ -110,55 +115,23 @@ const OtpButton = () => {
 };
 
 export default function Link() {
-  const [telegramId, setTelegramId] = useState('');
+  const { publicKey } = useWallet();
+  const { data } = useAccount(publicKey);
   const [signature] = useAtom(signatureAtom);
-  const wallet = useWallet();
-
-  useEffect(() => {
-    const fetchTelegramId = async () => {
-      if (wallet.publicKey) {
-        const tgId = await fetch(
-          endpoint + `/users/${wallet.publicKey.toString()}`
-        );
-        const data = await tgId.json();
-        setTelegramId(data.telegramId);
-      }
-    };
-
-    fetchTelegramId();
-  }, [wallet.publicKey]);
-
+  const telegramId = data?.user?.telegramId;
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-4xl font-bold mb-8">Link your wallet</h1>
-      <div className="max-w-xl mx-auto">
-        <div className=" flex flex-col justify-center gap-y-8 mt-40">
-          {wallet.publicKey && (
-            <>
-              <div className="text-sm text-muted-foreground">
-                <div>Telegram ID:</div>
-                <div>{telegramId ? telegramId : 'No telegram ID'}</div>
-                <div>public key: {wallet.publicKey.toString()}</div>
-              </div>
-            </>
-          )}
-          <h2 className="text-sm text-muted-foreground">
-            Generate an OTP to link your wallet, then submit it to verify your
-            account.
-          </h2>
-          <div className="flex justify-center">
-            <OtpField />
-          </div>
-          <div className="flex gap-4">
-            <OtpButton />
-            <SubmitButton />
-          </div>
-          <div className="text-sm text-muted-foreground">
-            <div>Signature:</div>
-            <div>{signature ? signature : 'No signature'}</div>
-          </div>
+    <div className="max-w-7xl w-full mx-auto pt-6 flex flex-col gap-y-4">
+      <div className="flex flex-col space-y-1">
+        <h1 className="text-3xl font-semibold">Link</h1>
+        <div
+          className={`pt-1 ${jetBrainsMono.className} text-muted-foreground`}
+        >
+          Link your Telegram account
         </div>
       </div>
+
+      {!publicKey && <WalletButton />}
+      {publicKey && <div>Telegram ID: {telegramId}</div>}
     </div>
   );
 }

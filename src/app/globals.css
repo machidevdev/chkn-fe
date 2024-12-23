@@ -3,15 +3,21 @@
 @tailwind utilities;
 
 .wallet-adapter-button-trigger {
-  background: rgb(100, 26, 230) !important; /* Purple */
-  border-radius: 8px !important;
-  padding-left: 16px !important;
-  padding-right: 16px !important;
+  background: linear-gradient(90deg, var(--button-from), var(--button-to)) !important;
+  color: white !important;
+  transition: all 0.2s ease !important;
+  text-transform: uppercase !important;
+  border-radius: 0 !important;
+  font-weight: bold !important;
+  border: none !important;
+  padding: 12px 24px !important;
+  font-family: var(--font-jetbrains-mono) !important;
 }
-.wallet-adapter-dropdown-list,
-.wallet-adapter-button {
-  font-family: inherit !important;
+
+.wallet-adapter-button-trigger:hover {
+  opacity: 0.9 !important;
 }
+
 @layer base {
   :root {
     /* Light Theme */

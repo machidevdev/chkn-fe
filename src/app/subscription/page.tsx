@@ -56,7 +56,9 @@ const SubCard = ({
   features: string[];
 }) => {
   return (
-    <Card className={`${jetBrainsMono.className}`}>
+    <Card
+      className={`${jetBrainsMono.className} border border-primary bg-transparent hover:bg-primary hover:text-accent-foreground transition-colors`}
+    >
       <CardContent className="flex flex-row gap-x-4 items-center ">
         <div className="text-[64px]">{price}</div>
         <div className={`flex flex-col gap-y-2 `}>
