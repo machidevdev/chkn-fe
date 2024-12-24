@@ -11,11 +11,15 @@ import {
 import { useAccount } from '@/hooks/useAccount';
 import { jetBrainsMono } from '@/lib/fonts';
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes';
+import { User } from '@prisma/client';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletConnectButton } from '@solana/wallet-adapter-react-ui';
 import { useQuery } from '@tanstack/react-query';
 import { useAtom, atom } from 'jotai';
 import { useEffect, useState } from 'react';
+import NextLink from 'next/link';
+import { motion } from 'framer-motion';
+import { useSearchParams } from 'next/navigation';
 const endpoint = 'https://chkn-indexer-production.up.railway.app/api';
 const otpAtom = atom<string>('');
 const signatureAtom = atom<string | null>(null);
@@ -58,10 +62,10 @@ const SubmitButton = () => {
     ].join('\n');
 
     const message = new TextEncoder().encode(messageText);
-    const signature = await wallet.signMessage(message);
-    setSignature(bs58.encode(signature));
-
     try {
+      const signature = await wallet.signMessage(message);
+      setSignature(bs58.encode(signature));
+
       const response = await fetch(`${endpoint}/otp/verify`, {
         method: 'POST',
         headers: {
@@ -77,50 +81,37 @@ const SubmitButton = () => {
       const data = await response.json();
       console.log(data);
       if (data.success) {
-        alert('Wallet linked successfully');
+        console.log('Wallet linked successfully');
       } else {
-        alert('Failed to link wallet');
+        console.warn('Failed to link wallet');
       }
     } catch (error) {
-      alert('Failed to link wallet');
+      console.warn('Failed to link wallet');
     }
   };
 
   return <Button onClick={() => handleSubmit()}>Submit</Button>;
 };
 
-const OtpButton = () => {
-  const wallet = useWallet();
-  const [, setOtp] = useAtom(otpAtom);
-
-  const createOtp = async () => {
-    if (!wallet.publicKey) {
-      alert('Please connect your wallet');
-      return;
-    }
-    const response = await fetch(`${endpoint}/otp`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        telegramId: wallet.publicKey.toString(),
-      }),
-    });
-    const data = await response.json();
-    setOtp(data.data.otp.code);
-  };
-
-  return <Button onClick={() => createOtp()}>Create OTP</Button>;
-};
-
 export default function Link() {
   const { publicKey } = useWallet();
-  const { data } = useAccount(publicKey);
+  const account = useAccount(publicKey);
   const [signature] = useAtom(signatureAtom);
-  const telegramId = data?.user?.telegramId;
+  const [, setOtp] = useAtom(otpAtom);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const code = searchParams.get('code');
+    if (code) {
+      setOtp(code);
+    }
+  }, [searchParams, setOtp]);
+
   return (
-    <div className="max-w-7xl w-full mx-auto pt-6 flex flex-col gap-y-4">
+    <motion.div
+      layoutId="page"
+      className="max-w-7xl w-full mx-auto pt-6 flex flex-col gap-y-4"
+    >
       <div className="flex flex-col space-y-1">
         <h1 className="text-3xl font-semibold">Link</h1>
         <div
@@ -131,7 +122,40 @@ export default function Link() {
       </div>
 
       {!publicKey && <WalletButton />}
-      {publicKey && <div>Telegram ID: {telegramId}</div>}
-    </div>
+      {account.isLoading && <div>Loading...</div>}
+      {account.data && (
+        <div className="flex flex-col gap-4">
+          <div>
+            Telegram ID:{' '}
+            {account.data?.user ? (
+              account.data.user.telegramId ? (
+                'Linked!'
+              ) : (
+                'Not Linked'
+              )
+            ) : (
+              <span>
+                No active subscription. Please{' '}
+                <NextLink
+                  href="/subscription"
+                  className="text-primary hover:underline"
+                >
+                  subscribe
+                </NextLink>{' '}
+                to link your account.
+              </span>
+            )}
+          </div>
+          {account.data?.user && !account.data.user.telegramId && (
+            <div className="flex flex-col gap-4">
+              <OtpField />
+              <div className="flex gap-4 max-w-sm">
+                <SubmitButton />
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </motion.div>
   );
 }

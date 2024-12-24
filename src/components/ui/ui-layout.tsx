@@ -5,25 +5,8 @@ import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { ReactNode, Suspense, useEffect, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-  NavigationMenuViewport,
-} from '@/components/ui/navigation-menu';
 
-import { AccountChecker } from '../account/account-ui';
-import {
-  ClusterChecker,
-  ClusterUiSelect,
-  ExplorerLink,
-} from '../cluster/cluster-ui';
-import { WalletButton } from '../solana/solana-provider';
+import { ExplorerLink } from '../cluster/cluster-ui';
 import Navbar from '../Navbar';
 
 export function UiLayout({ children }: { children: ReactNode }) {
@@ -103,45 +86,6 @@ export function AppModal({
       </div>
     </dialog>
   );
-}
-
-export function AppHero({
-  children,
-  title,
-  subtitle,
-}: {
-  children?: ReactNode;
-  title: ReactNode;
-  subtitle: ReactNode;
-}) {
-  return (
-    <div className="hero py-[64px]">
-      <div className="hero-content text-center">
-        <div className="max-w-2xl">
-          {typeof title === 'string' ? (
-            <h1 className="text-5xl font-bold">{title}</h1>
-          ) : (
-            title
-          )}
-          {typeof subtitle === 'string' ? (
-            <p className="py-6">{subtitle}</p>
-          ) : (
-            subtitle
-          )}
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function ellipsify(str = '', len = 4) {
-  if (str.length > 30) {
-    return (
-      str.substring(0, len) + '..' + str.substring(str.length - len, str.length)
-    );
-  }
-  return str;
 }
 
 export function useTransactionToast() {

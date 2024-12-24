@@ -5,6 +5,7 @@ import { jetBrainsMono } from '@/lib/fonts';
 import { useQuery } from '@tanstack/react-query';
 import { UserWithSubscription } from '@/lib/types';
 import { useAccount } from '@/hooks/useAccount';
+import { motion } from 'framer-motion';
 
 const AccountHeader = () => {
   return (
@@ -132,13 +133,19 @@ export default function AccountListFeature() {
   const { publicKey } = useWallet();
   const { data } = useAccount(publicKey);
   return (
-    <div className="max-w-7xl w-full mx-auto flex flex-col gap-4">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      layoutId="page"
+      className="max-w-7xl w-full mx-auto flex flex-col gap-4"
+    >
       <AccountHeader />
       <div className="flex flex-col w-full gap-12">
         <Wallet />
         <Telegram user={data?.user} />
         <Subscription user={data?.user} />
       </div>
-    </div>
+    </motion.div>
   );
 }
