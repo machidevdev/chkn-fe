@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { ReactNode, Suspense, useEffect, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-
 import { ExplorerLink } from '../cluster/cluster-ui';
 import Navbar from '../Navbar';
 
