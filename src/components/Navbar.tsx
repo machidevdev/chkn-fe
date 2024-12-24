@@ -19,7 +19,7 @@ export default function Navbar() {
 
   return (
     <div className="bg-navbar-bg flex flex-col">
-      <div className="flex w-full justify-between max-w-7xl mx-auto py-4">
+      <div className="flex w-full justify-between max-w-7xl mx-auto py-4 px-2">
         <div className="flex items-center gap-x-8">
           <div className="flex items-center gap-x-4">
             <Image src={'/chkn.png'} alt="logo" width={48} height={40} />
