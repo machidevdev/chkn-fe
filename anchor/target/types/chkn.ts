@@ -14,6 +14,52 @@ export type Chkn = {
   },
   "instructions": [
     {
+      "name": "initializingSettings",
+      "discriminator": [
+        29,
+        115,
+        38,
+        96,
+        51,
+        23,
+        146,
+        117
+      ],
+      "accounts": [
+        {
+          "name": "settings",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  116,
+                  116,
+                  105,
+                  110,
+                  103,
+                  115
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "processPayment",
       "discriminator": [
         189,
@@ -36,6 +82,26 @@ export type Chkn = {
           "writable": true
         },
         {
+          "name": "settings",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  116,
+                  116,
+                  105,
+                  110,
+                  103,
+                  115
+                ]
+              }
+            ]
+          }
+        },
+        {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
@@ -45,6 +111,76 @@ export type Chkn = {
           "name": "amount",
           "type": "u64"
         }
+      ]
+    },
+    {
+      "name": "updateSettings",
+      "discriminator": [
+        81,
+        166,
+        51,
+        213,
+        158,
+        84,
+        157,
+        108
+      ],
+      "accounts": [
+        {
+          "name": "settings",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  116,
+                  116,
+                  105,
+                  110,
+                  103,
+                  115
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "newSettings",
+          "type": {
+            "defined": {
+              "name": "settings"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "settings",
+      "discriminator": [
+        223,
+        179,
+        163,
+        190,
+        177,
+        224,
+        67,
+        173
       ]
     }
   ],
@@ -102,6 +238,34 @@ export type Chkn = {
           {
             "name": "receiver",
             "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "settings",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "priceIndividualMonthly",
+            "type": "u64"
+          },
+          {
+            "name": "priceIndividualYearly",
+            "type": "u64"
+          },
+          {
+            "name": "priceGroupMonthly",
+            "type": "u64"
+          },
+          {
+            "name": "priceGroupYearly",
+            "type": "u64"
           }
         ]
       }
