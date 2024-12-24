@@ -108,10 +108,7 @@ export default function Link() {
   }, [searchParams, setOtp]);
 
   return (
-    <motion.div
-      layoutId="page"
-      className="max-w-7xl w-full mx-auto pt-6 flex flex-col gap-y-4"
-    >
+    <div className="max-w-7xl w-full mx-auto pt-6 flex flex-col gap-y-4">
       <div className="flex flex-col space-y-1">
         <h1 className="text-3xl font-semibold">Link</h1>
         <div
@@ -156,6 +153,6 @@ export default function Link() {
           )}
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }
