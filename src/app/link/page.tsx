@@ -114,16 +114,17 @@ export default function Link() {
         Insert the 6 digit code you have received in the Telegram chat and then
         sign the transaction using your wallet.
       </div>
+
+      <OtpField />
       <Button
         variant="outline"
-        className={`w-full uppercase text-primary ${jetBrainsMono.className}`}
+        className={` max-w-80 uppercase text-primary ${jetBrainsMono.className}`}
         onClick={() => {
           console.log('sign');
         }}
       >
         Sign
       </Button>
-      <OtpField />
       {!publicKey && <WalletButton />}
       {account.isLoading && <div>Loading...</div>}
       {account.data && (

@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 const AccountHeader = () => {
   return (
     <div className="py-6 flex flex-col gap-1 border-b border-border">
-      <h1 className="text-2xl font-semibold">Account</h1>
+      <h1 className="text-[30px] font-semibold">Account</h1>
       <p className={`text-sm text-muted-foreground ${jetBrainsMono.className}`}>
         Manage your accounts and balances
       </p>
@@ -24,7 +24,13 @@ const Wallet = () => {
     <div className="flex flex-col gap-1">
       <h1 className="text-2xl font-semibold">Wallet</h1>
       <p className={`text-sm text-muted-foreground ${jetBrainsMono.className}`}>
-        {publicKey ? publicKey.toBase58() : <WalletButton />}
+        {publicKey ? (
+          publicKey.toBase58().slice(0, 4) +
+          '...' +
+          publicKey.toBase58().slice(-4)
+        ) : (
+          <WalletButton />
+        )}
       </p>
     </div>
   );
