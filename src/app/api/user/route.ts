@@ -13,7 +13,7 @@ export async function GET(request: Request) {
       id: true,
       address: true,
       createdAt: true,
-      Subscription: {
+      subscriptions: {
         take: 1,
         orderBy: {
           createdAt: 'desc'
