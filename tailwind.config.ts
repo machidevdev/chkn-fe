@@ -63,7 +63,10 @@ const config: Config = {
 			},
 			backgroundColor: {
 				'navbar-bg': '#0D0F17',
-			}
+			},
+			borderColor: {
+				'otp-border': 'var(--otp-border)',
+			},
   	}
   },
   plugins: [require('daisyui'), require("tailwindcss-animate")],

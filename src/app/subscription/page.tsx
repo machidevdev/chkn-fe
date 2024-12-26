@@ -103,10 +103,7 @@ const SubSection = () => {
 
 export default function Page() {
   return (
-    <motion.div
-      layoutId="page"
-      className="max-w-7xl w-full mx-auto flex flex-col"
-    >
+    <div className="max-w-7xl w-full mx-auto flex flex-col px-4">
       <div className="flex flex-col py-6 my-1 gap-y-1 w-full border-b border-border">
         <h1 className="text-3xl font-semibold">Subscription</h1>
         <p className={`text-muted-foreground ${jetBrainsMono.className}`}>
@@ -116,6 +113,6 @@ export default function Page() {
       <div className="flex flex-col gap-4">
         <SubSection />
       </div>
-    </motion.div>
+    </div>
   );
 }

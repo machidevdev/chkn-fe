@@ -133,7 +133,7 @@ export default function AccountListFeature() {
   const { publicKey } = useWallet();
   const { data } = useAccount(publicKey);
   return (
-    <div className="max-w-7xl w-full mx-auto flex flex-col gap-4">
+    <div className="max-w-7xl w-full mx-auto flex flex-col gap-4 px-4">
       <AccountHeader />
       <div className="flex flex-col w-full gap-12">
         <Wallet />

@@ -53,6 +53,7 @@
     --radius: 0.5rem;
     --button-from: #f087fe;
     --button-to: #8834d8;
+    --otp-border: #3D4157
   }
   .dark {
     /* Dark Theme */
@@ -87,6 +88,7 @@
     --chart-3: 30 80% 55%; /* Orange: #F97316 */
     --chart-4: 280 65% 60%; /* Purple: #A855F7 */
     --chart-5: 340 75% 55%; /* Pink: #EC4899 */
+    --otp-border: #3D4157
   }
 }
 @layer base {

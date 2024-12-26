@@ -11,14 +11,10 @@ import {
 import { useAccount } from '@/hooks/useAccount';
 import { jetBrainsMono } from '@/lib/fonts';
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes';
-import { User } from '@prisma/client';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { WalletConnectButton } from '@solana/wallet-adapter-react-ui';
-import { useQuery } from '@tanstack/react-query';
 import { useAtom, atom } from 'jotai';
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
-import { motion } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
 const endpoint = 'https://chkn-indexer-production.up.railway.app/api';
 const otpAtom = atom<string>('');
@@ -33,9 +29,6 @@ const OtpField = () => {
         <InputOTPSlot index={0} />
         <InputOTPSlot index={1} />
         <InputOTPSlot index={2} />
-      </InputOTPGroup>
-      <InputOTPSeparator />
-      <InputOTPGroup>
         <InputOTPSlot index={3} />
         <InputOTPSlot index={4} />
         <InputOTPSlot index={5} />
@@ -108,7 +101,7 @@ export default function Link() {
   }, [searchParams, setOtp]);
 
   return (
-    <div className="max-w-7xl w-full mx-auto pt-6 flex flex-col gap-y-4">
+    <div className="max-w-7xl w-full mx-auto pt-6 flex flex-col gap-y-4 px-4">
       <div className="flex flex-col space-y-1">
         <h1 className="text-3xl font-semibold">Link</h1>
         <div
@@ -117,7 +110,20 @@ export default function Link() {
           Link your Telegram account
         </div>
       </div>
-
+      <div className={`${jetBrainsMono.className} text-muted-foreground`}>
+        Insert the 6 digit code you have received in the Telegram chat and then
+        sign the transaction using your wallet.
+      </div>
+      <Button
+        variant="outline"
+        className={`w-full uppercase text-primary ${jetBrainsMono.className}`}
+        onClick={() => {
+          console.log('sign');
+        }}
+      >
+        Sign
+      </Button>
+      <OtpField />
       {!publicKey && <WalletButton />}
       {account.isLoading && <div>Loading...</div>}
       {account.data && (

@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/utils';
 import { User } from '@prisma/client';
 
-
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const address = searchParams.get('address');
@@ -13,8 +12,6 @@ export async function GET(request: Request) {
     select: {
       id: true,
       address: true,
-      telegramId: true,
-      credits: true,
       createdAt: true,
       Subscription: {
         take: 1,
