@@ -1,0 +1,405 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Swap {
+  id           String  @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slot         Int?
+  timestamp    BigInt
+  tx           String
+  buyMint      String
+  buyAmount    Decimal
+  buyDecimals  Int
+  buyAmountUI  String
+  sellMint     String
+  sellAmount   Decimal
+  sellDecimals Int
+  sellAmountUI String
+  maker        String
+  hash         String
+
+  @@id([id, timestamp])
+  @@index([timestamp])
+  @@index([buyMint, sellMint])
+  @@index([maker])
+  @@index([buyMint])
+  @@index([sellMint])
+  @@index([maker, buyMint])
+  @@index([maker, sellMint])
+}
+
+model NewPair {
+  id             String   @id @default(uuid())
+  timestamp      BigInt
+  tx             String
+  maker          String
+  baseMint       String
+  quoteMint      String
+  baseReserve    Decimal
+  baseDecimals   Int
+  uiBaseReserve  String
+  quoteReserve   Decimal
+  quoteDecimals  Int
+  uiQuoteReserve String
+  hash           String
+  openTime       BigInt?
+  lpDecimals     Int?
+  lpMint         String?
+  lpReserve      Decimal?
+  slot           Int?
+
+  @@index([timestamp])
+  @@index([baseMint, quoteMint])
+}
+
+model LiquidityEvent {
+  id        String  @id @default(uuid())
+  timestamp BigInt
+  tx        String
+  maker     String
+  add       Boolean
+  amountA   Decimal
+  uiAmountA String
+  decimalsA Int
+  mintA     String
+  amountB   Decimal
+  uiAmountB String
+  decimalsB Int
+  mintB     String
+  hash      String
+  slot      Int?
+
+  @@index([timestamp])
+}
+
+model MintBurnEvent {
+  id        String  @id @default(uuid())
+  tx        String
+  timestamp BigInt
+  mint      String
+  isMint    Boolean
+  amount    Decimal
+  maker     String
+  wallet    String
+  hash      String
+  slot      Int?
+
+  @@index([timestamp])
+  @@index([mint])
+}
+
+model CreateEvent {
+  id        String @id @default(uuid())
+  tx        String
+  timestamp BigInt
+  source    String
+  mint      String
+  account   String
+  hash      String
+  slot      Int?
+
+  @@index([timestamp])
+  @@index([mint])
+  @@index([source])
+  @@index([account])
+}
+
+model CloseEvent {
+  id        String @id @default(uuid())
+  slot      Int?
+  tx        String
+  timestamp BigInt
+  owner     String
+  account   String
+  hash      String
+
+  @@index([timestamp])
+  @@index([owner])
+  @@index([account])
+}
+
+model Transfer {
+  id        String  @id @default(uuid())
+  tx        String
+  timestamp BigInt
+  from      String
+  to        String
+  authority String?
+  maker     String
+  amount    Decimal
+  hash      String
+  mint      String?
+  slot      Int?
+
+  @@index([timestamp])
+  @@index([from, to])
+}
+
+model ParsedTransfer {
+  id        String  @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slot      Int?
+  tx        String
+  timestamp BigInt
+  maker     String
+  mint      String
+  from      String
+  to        String
+  amount    Decimal
+  hash      String
+
+  @@id([id, timestamp])
+  @@index([timestamp])
+  @@index([mint])
+  @@index([from, to])
+}
+
+model Balance {
+  id            String  @id @default(uuid())
+  slot          Int
+  tx            String
+  timestamp     BigInt
+  mint          String
+  owner         String
+  uiTokenAmount String
+  amount        Decimal
+  decimals      Int
+  hash          String  @unique
+
+  @@index([timestamp])
+  @@index([mint])
+  @@index([owner])
+  @@index([mint, owner])
+}
+
+model TokenBalance {
+  id        String @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  mint      String
+  timestamp BigInt
+  balances  Json
+
+  @@id([id, timestamp])
+  @@index([mint])
+}
+
+model TokenInfo {
+  id              String   @id @default(uuid())
+  mint            String   @unique
+  symbol          String
+  name            String
+  image           String?
+  description     String?
+  website         String?
+  twitter         String?
+  telegram        String?
+  isMutable       Boolean
+  metadataAddress String?
+  mintAuthority   String?
+  freezeAuthority String?
+  updateAuthority String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([mint])
+  @@index([symbol])
+}
+
+model DataSnapshot {
+  id           String   @id @default(uuid())
+  snapshotType String
+  timestamp    DateTime @default(now())
+  metadata     Json?
+  data         Bytes
+
+  @@index([snapshotType, timestamp])
+}
+
+model FollowedWallet {
+  id          String   @id @default(uuid())
+  address     String   @unique
+  label       String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([address])
+}
+
+model Trade {
+  id                     String      @id @default(uuid())
+  isPaper                Boolean
+  strategyName           String
+  entryTimestamp         DateTime
+  exitTimestamp          DateTime?
+  entryTimestampExecuted DateTime?
+  exitTimestampExecuted  DateTime?
+  entryPrice             Decimal
+  exitPrice              Decimal?
+  amount                 Decimal
+  tokenMint              String
+  status                 TradeStatus
+  profitLoss             Decimal?
+  entryTransaction       String?
+  exitTransaction        String?
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
+
+  @@index([strategyName])
+  @@index([entryTimestamp])
+  @@index([tokenMint])
+  @@index([status])
+  @@index([isPaper])
+}
+
+model UserState {
+  id        String   @id @default(uuid())
+  chatId    String
+  userId    String
+  command   String?
+  step      String?
+  data      Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([chatId, userId])
+}
+
+model Chat {
+  id         String       @id
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  calls      Call[]
+  users      ChatToUser[]
+  userStates UserState[]
+  scans      Scan[]
+}
+
+model User {
+  id        String       @id @default(uuid())
+  username  String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  calls     Call[]
+  chats     ChatToUser[]
+  states    UserState[]
+  scans     Scan[]
+  address   String? @unique
+  subscriptions Subscription[]
+  payments Payment[]
+}
+
+
+model Subscription {
+  id        Int      @id @default(autoincrement())
+  user      User @relation(fields: [address], references: [address])
+  address   String   @db.VarChar(44)
+  txHash    String   @db.VarChar(88)
+  type      String   @db.VarChar(10)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
+model Payment {
+  user      User @relation(fields: [address], references: [address])
+  address   String   @db.VarChar(44) 
+  txHash    String   @db.VarChar(88) @id
+  createdAt DateTime @default(now())
+  amount    Float
+}
+
+model Otp {
+  code         String   @db.Char(6) @unique @id
+  telegramId   String   // telegram id
+  expiresAt    DateTime //5 minutes after creation
+  createdAt    DateTime @default(now())
+
+  @@index([telegramId])
+  @@index([code])
+}
+
+
+model Call {
+  id        String   @id @default(uuid())
+  timestamp BigInt
+  mint      String
+  price     Decimal
+  marketCap Decimal
+  userId    String
+  chatId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model ChatToUser {
+  userId String
+  chatId String
+  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, chatId])
+}
+
+model PairReserves {
+  id            String   @id @default(uuid())
+  slot          Int
+  tx            String
+  timestamp     BigInt
+  mint          String
+  wsolAmount    Decimal
+  wsolUIAmount  String
+  tokenAmount   Decimal
+  tokenUIAmount String
+  tokenDecimals Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([timestamp])
+  @@index([mint])
+  @@index([mint, timestamp])
+}
+
+enum TradeStatus {
+  OPEN
+  CLOSED
+  CANCELLED
+}
+
+enum ScanType {
+  SCAN
+  FIRST
+}
+
+enum ScanStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model Scan {
+  id           Int       @id @default(autoincrement())
+  type         ScanType
+  user         User      @relation(fields: [userId], references: [id])
+  userId       String
+  chat         Chat      @relation(fields: [chatId], references: [id])
+  chatId       String
+  tokenMint    String
+  startRange   DateTime?
+  endRange     DateTime?
+  transactions Int?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  status       ScanStatus
+  analysis     Boolean   @default(false)
+
+  @@index([userId])
+  @@index([chatId])
+  @@index([tokenMint])
+}

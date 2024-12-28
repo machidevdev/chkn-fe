@@ -1,27 +1,44 @@
 import { cn } from '@/lib/utils';
 import { ButtonHTMLAttributes, forwardRef } from 'react';
+import { jetBrainsMono } from '@/lib/fonts';
+import { cva } from 'class-variance-authority';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'default' | 'outline';
+  variant?: 'default' | 'outline' | 'ghost';
   size?: 'default' | 'sm' | 'lg';
 }
 
+const buttonVariants = cva(
+  'inline-flex items-center justify-center font-medium transition-colors',
+  {
+    variants: {
+      variant: {
+        default:
+          'bg-gradient-to-r from-[var(--button-from)] to-[var(--button-to)] text-white',
+        outline:
+          'border border-primary bg-transparent hover:bg-primary hover:text-accent-foreground',
+        ghost: 'bg-transparent text-white hover:text-primary',
+      },
+      size: {
+        default: 'w-full py-2.5 px-4',
+        sm: 'h-9 px-3',
+        lg: 'h-11 px-8',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+);
+
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'default', size = 'default', ...props }, ref) => {
+  ({ className, variant, size, ...props }, ref) => {
     return (
       <button
         className={cn(
-          'inline-flex items-center justify-center rounded-md font-medium transition-colors',
+          buttonVariants({ variant, size }),
           'disabled:opacity-50 disabled:pointer-events-none',
-          {
-            'bg-primary text-primary-foreground hover:bg-primary/90':
-              variant === 'default',
-            'border border-input hover:bg-accent hover:text-accent-foreground':
-              variant === 'outline',
-            'h-10 py-2 px-4': size === 'default',
-            'h-9 px-3': size === 'sm',
-            'h-11 px-8': size === 'lg',
-          },
           className
         )}
         ref={ref}

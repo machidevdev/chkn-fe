@@ -2,31 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  height: 100%;
+.wallet-adapter-button-trigger {
+  background: linear-gradient(90deg, var(--button-from), var(--button-to)) !important;
+  color: white !important;
+  transition: all 0.2s ease !important;
+  text-transform: uppercase !important;
+  border-radius: 0 !important;
+  font-weight: bold !important;
+  border: none !important;
+  padding: 12px 24px !important;
+  font-family: var(--font-jetbrains-mono) !important;
 }
 
-.wallet-adapter-button-trigger {
-  background: rgb(100, 26, 230) !important; /* Purple */
-  border-radius: 8px !important;
-  padding-left: 16px !important;
-  padding-right: 16px !important;
+.wallet-adapter-button-trigger:hover {
+  opacity: 0.9 !important;
 }
-.wallet-adapter-dropdown-list,
-.wallet-adapter-button {
-  font-family: inherit !important;
-}
+
 @layer base {
   :root {
     /* Light Theme */
-    --background: 0 0% 3.9%; /* Almost Black: #0A0A0A */
+    --background: #151722;
+    --navbar-bg: hsla(231, 42%, 9%, 1);
     --foreground: 0 0% 3.9%; /* Almost Black: #0A0A0A */
-    --card: 0 0% 100%; /* Pure White: #FFFFFF */
+    --card: rgba(40, 43, 57, 0.40);    ; /* Dark Purple: #0A0A0F */
     --card-foreground: 0 0% 3.9%; /* Almost Black: #0A0A0A */
     --popover: 0 0% 100%; /* Pure White: #FFFFFF */
     --popover-foreground: 0 0% 3.9%; /* Almost Black: #0A0A0A */
-    --primary: 0 0% 9%; /* Dark Gray: #171717 */
+    --primary: 293 98% 76%; /* Pink: #f087fe */
     --primary-foreground: 0 0% 98%; /* Off White: #FAFAFA */
     --secondary: 0 0% 96.1%; /* Light Gray: #F5F5F5 */
     --secondary-foreground: 0 0% 9%; /* Dark Gray: #171717 */
@@ -36,9 +38,10 @@ body {
     --accent-foreground: 0 0% 9%; /* Dark Gray: #171717 */
     --destructive: 0 84.2% 60.2%; /* Red: #EF4444 */
     --destructive-foreground: 0 0% 98%; /* Off White: #FAFAFA */
-    --border: 0 0% 89.8%; /* Light Gray: #E5E5E5 */
+    --border: 240 14% 29%; /* Light Gray: #3D4157 */
     --input: 0 0% 89.8%; /* Light Gray: #E5E5E5 */
     --ring: 0 0% 3.9%; /* Almost Black: #0A0A0A */
+    --button-bg: linear-gradient(90deg, #f087fe 0%, #8834d8 100%);
 
     /* Chart Colors - Light Theme */
     --chart-1: 12 76% 61%; /* Coral: #E67E22 */
@@ -48,16 +51,24 @@ body {
     --chart-5: 27 87% 67%; /* Orange: #F39C12 */
 
     --radius: 0.5rem;
+    --button-from: #f087fe;
+    --button-to: #8834d8;
+    --otp-border: #3D4157
   }
   .dark {
     /* Dark Theme */
-    --background: 0 0% 3.9%; /* Almost Black: #0A0A0A */
+    --background: #151722;
+    --navbar-bg: hsla(231, 42%, 9%, 1);
+    --button-bg: linear-gradient(90deg, #f087fe 0%, #8834d8 100%);
+
+    /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */ /* Almost Black: #0A0A0A */
     --foreground: 0 0% 98%; /* Off White: #FAFAFA */
-    --card: 0 0% 3.9%; /* Almost Black: #0A0A0A */
+    --card: 253, 20%, 17%; /* Dark Purple: #0A0A0F */
     --card-foreground: 0 0% 98%; /* Off White: #FAFAFA */
     --popover: 0 0% 3.9%; /* Almost Black: #0A0A0A */
     --popover-foreground: 0 0% 98%; /* Off White: #FAFAFA */
-    --primary: 0 0% 98%; /* Off White: #FAFAFA */
+    --primary: 293 98% 76%; /* Pink: #f087fe */
+    --navbar-bg: hsba(231, 42%, 9%, 1)
     --primary-foreground: 0 0% 9%; /* Dark Gray: #171717 */
     --secondary: 0 0% 14.9%; /* Very Dark Gray: #262626 */
     --secondary-foreground: 0 0% 98%; /* Off White: #FAFAFA */
@@ -67,7 +78,7 @@ body {
     --accent-foreground: 0 0% 98%; /* Off White: #FAFAFA */
     --destructive: 0 62.8% 30.6%; /* Dark Red: #991B1B */
     --destructive-foreground: 0 0% 98%; /* Off White: #FAFAFA */
-    --border: 0 0% 14.9%; /* Very Dark Gray: #262626 */
+    --border: 240 14% 29%; /* Light Gray: #3D4157 */
     --input: 0 0% 14.9%; /* Very Dark Gray: #262626 */
     --ring: 0 0% 83.1%; /* Light Gray: #D4D4D4 */
 
@@ -77,6 +88,7 @@ body {
     --chart-3: 30 80% 55%; /* Orange: #F97316 */
     --chart-4: 280 65% 60%; /* Purple: #A855F7 */
     --chart-5: 340 75% 55%; /* Pink: #EC4899 */
+    --otp-border: #3D4157
   }
 }
 @layer base {
@@ -84,6 +96,13 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background-color: var(--background);
   }
+}
+
+.bg-tile {
+  background-image: var(--bg-tile);
+  background-repeat: repeat;
+  background-size: 100px auto;
 }

@@ -15,7 +15,6 @@ const config: Config = {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
-  			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
@@ -55,7 +54,19 @@ const config: Config = {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
-  		}
+			},
+			navbar: {
+				bg: 'hsl(var(--navbar-bg))',
+			},
+			backgroundImage: {
+				'tile': 'url("/tile.png")',
+			},
+			backgroundColor: {
+				'navbar-bg': '#0D0F17',
+			},
+			borderColor: {
+				'otp-border': 'var(--otp-border)',
+			},
   	}
   },
   plugins: [require('daisyui'), require("tailwindcss-animate")],
