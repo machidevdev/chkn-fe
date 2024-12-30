@@ -1,10 +1,8 @@
 import { prisma } from '@/lib/utils';
-import { User } from '@prisma/client';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const address = searchParams.get('address');
-
   const user = await prisma.user.findUnique({
     where: {
       address: address as string,
@@ -13,18 +11,24 @@ export async function GET(request: Request) {
       id: true,
       address: true,
       createdAt: true,
+      credits: true,
+      creditsUsed: true,
       subscriptions: {
-        take: 1,
+        where: {
+          expiresAt: {
+            gt: new Date(),
+          },
+        },
         orderBy: {
-          createdAt: 'desc'
-        }
-      }
+          expiresAt: 'desc',
+        },
+        take: 1,
+      },
     },
   });
 
   if (!user) {
     return Response.json({ error: 'User not found', success: false }, { status: 404 });
   }
-
   return Response.json({ user, success: true }, { status: 200 });
 }

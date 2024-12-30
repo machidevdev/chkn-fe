@@ -5,7 +5,8 @@ import { jetBrainsMono } from '@/lib/fonts';
 import { useQuery } from '@tanstack/react-query';
 import { UserWithSubscription } from '@/lib/types';
 import { useAccount } from '@/hooks/useAccount';
-import { motion } from 'framer-motion';
+import { Subscription, User } from '@prisma/client';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const AccountHeader = () => {
   return (
@@ -36,6 +37,24 @@ const Wallet = () => {
   );
 };
 
+const WalletSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-1">
+      <h1 className="text-2xl font-semibold">Wallet</h1>
+      <Skeleton className="h-6 w-32" />
+    </div>
+  );
+};
+
+const TelegramSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-1">
+      <h1 className="text-2xl font-semibold">Telegram</h1>
+      <Skeleton className="h-6 w-48" />
+    </div>
+  );
+};
+
 const Telegram = ({ user }: { user?: UserWithSubscription }) => {
   const { publicKey } = useWallet();
   const { data, isLoading, error } = useQuery({
@@ -51,6 +70,7 @@ const Telegram = ({ user }: { user?: UserWithSubscription }) => {
   });
 
   if (!publicKey) return null;
+  if (isLoading) return <TelegramSkeleton />;
 
   if (isLoading)
     return (
@@ -75,7 +95,37 @@ const Telegram = ({ user }: { user?: UserWithSubscription }) => {
   );
 };
 
-const Subscription = ({ user }: { user?: UserWithSubscription }) => {
+const SubscriptionListSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-semibold">Your subscription</h1>
+      <div className="flex flex-row">
+        <div className="flex flex-col gap-y-2 pr-3">
+          <p className="text-white">Type</p>
+          <Skeleton className="h-6 w-24" />
+        </div>
+        <div className="flex flex-col gap-y-2 border-l border-border px-3">
+          <p className="text-white">Status</p>
+          <Skeleton className="h-6 w-20" />
+        </div>
+        <div className="flex flex-col gap-y-2 border-l border-border px-3">
+          <p className="text-white">Next payment</p>
+          <Skeleton className="h-6 w-28" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const SubscriptionList = ({
+  user,
+  isLoading,
+}: {
+  user?: User & { subscriptions: Subscription[] };
+  isLoading?: boolean;
+}) => {
+  if (isLoading) return <SubscriptionListSkeleton />;
+
   if (!user)
     return (
       <div className="text-2xl">
@@ -88,7 +138,7 @@ const Subscription = ({ user }: { user?: UserWithSubscription }) => {
       </div>
     );
 
-  const subscription = user.Subscription?.[0];
+  const subscription = user.subscriptions?.[0];
   const isActive =
     subscription?.expiresAt && new Date(subscription.expiresAt) > new Date();
   const nextPayment = subscription?.expiresAt
@@ -104,7 +154,7 @@ const Subscription = ({ user }: { user?: UserWithSubscription }) => {
           <p
             className={`text-sm text-muted-foreground ${jetBrainsMono.className}`}
           >
-            {subscription?.type || 'None'}
+            {subscription?.type}
           </p>
         </div>
         <div className="flex flex-col gap-y-2 border-l border-border px-3">
@@ -135,16 +185,37 @@ const Subscription = ({ user }: { user?: UserWithSubscription }) => {
   );
 };
 
+const CreditsSkeleton = () => {
+  return <Skeleton className="h-6 w-28" />;
+};
+
+const Credits = ({ user }: { user?: User }) => {
+  return (
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-semibold">Credits used</h1>
+      <div className="flex flex-row">
+        <p
+          className={`text-sm text-muted-foreground ${jetBrainsMono.className}`}
+        >
+          {user?.creditsUsed || 0} / {user?.credits || 0}
+        </p>
+      </div>
+    </div>
+  );
+};
+
 export default function AccountListFeature() {
   const { publicKey } = useWallet();
-  const { data } = useAccount(publicKey);
+  const { data, isLoading } = useAccount(publicKey);
+
   return (
     <div className="max-w-7xl w-full mx-auto flex flex-col gap-4 px-4">
       <AccountHeader />
       <div className="flex flex-col w-full gap-12">
-        <Wallet />
+        {isLoading ? <WalletSkeleton /> : <Wallet />}
         <Telegram user={data?.user} />
-        <Subscription user={data?.user} />
+        <SubscriptionList user={data?.user} isLoading={isLoading} />
+        {isLoading ? <CreditsSkeleton /> : <Credits user={data?.user} />}
       </div>
     </div>
   );

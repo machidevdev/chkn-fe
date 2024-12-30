@@ -128,33 +128,11 @@ export type Chkn = {
       "accounts": [
         {
           "name": "settings",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  115,
-                  101,
-                  116,
-                  116,
-                  105,
-                  110,
-                  103,
-                  115
-                ]
-              }
-            ]
-          }
+          "writable": true
         },
         {
-          "name": "payer",
-          "writable": true,
+          "name": "owner",
           "signer": true
-        },
-        {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [

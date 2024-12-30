@@ -9,7 +9,7 @@ import { LinkIcon } from './icons/LinkIcon';
 import { ConnectButton } from './solana/connect-button';
 
 const navItems = [
-  { label: 'Account', path: '/account', icon: AccountIcon },
+  { label: 'Account', path: '/', icon: AccountIcon },
   { label: 'Subscription', path: '/subscription', icon: RefreshIcon },
   { label: 'Link', path: '/link', icon: LinkIcon },
 ];

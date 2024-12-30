@@ -21,16 +21,8 @@ model Swap {
   sellDecimals Int
   sellAmountUI String
   maker        String
-  hash         String
 
   @@id([id, timestamp])
-  @@index([timestamp])
-  @@index([buyMint, sellMint])
-  @@index([maker])
-  @@index([buyMint])
-  @@index([sellMint])
-  @@index([maker, buyMint])
-  @@index([maker, sellMint])
 }
 
 model NewPair {
@@ -93,55 +85,8 @@ model MintBurnEvent {
   @@index([mint])
 }
 
-model CreateEvent {
-  id        String @id @default(uuid())
-  tx        String
-  timestamp BigInt
-  source    String
-  mint      String
-  account   String
-  hash      String
-  slot      Int?
-
-  @@index([timestamp])
-  @@index([mint])
-  @@index([source])
-  @@index([account])
-}
-
-model CloseEvent {
-  id        String @id @default(uuid())
-  slot      Int?
-  tx        String
-  timestamp BigInt
-  owner     String
-  account   String
-  hash      String
-
-  @@index([timestamp])
-  @@index([owner])
-  @@index([account])
-}
-
-model Transfer {
-  id        String  @id @default(uuid())
-  tx        String
-  timestamp BigInt
-  from      String
-  to        String
-  authority String?
-  maker     String
-  amount    Decimal
-  hash      String
-  mint      String?
-  slot      Int?
-
-  @@index([timestamp])
-  @@index([from, to])
-}
-
 model ParsedTransfer {
-  id        String  @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id        String  @id @default(uuid())
   slot      Int?
   tx        String
   timestamp BigInt
@@ -150,30 +95,8 @@ model ParsedTransfer {
   from      String
   to        String
   amount    Decimal
-  hash      String
 
-  @@id([id, timestamp])
-  @@index([timestamp])
   @@index([mint])
-  @@index([from, to])
-}
-
-model Balance {
-  id            String  @id @default(uuid())
-  slot          Int
-  tx            String
-  timestamp     BigInt
-  mint          String
-  owner         String
-  uiTokenAmount String
-  amount        Decimal
-  decimals      Int
-  hash          String  @unique
-
-  @@index([timestamp])
-  @@index([mint])
-  @@index([owner])
-  @@index([mint, owner])
 }
 
 model TokenBalance {
@@ -292,6 +215,9 @@ model User {
   address   String? @unique
   subscriptions Subscription[]
   payments Payment[]
+  credits   Int @default(0)
+  creditsUsed Int @default(0)
+  isTelegramLinked Boolean @default(false)
 }
 
 

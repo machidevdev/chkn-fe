@@ -9,10 +9,8 @@ import { useAnchorProvider } from '../solana/solana-provider';
 import { useTransactionToast } from '../ui/ui-layout';
 import IDL from '../../../anchor/target/idl/chkn.json';
 import * as anchor from '@coral-xyz/anchor';
-
-const RECEIVER_WALLET = new PublicKey(
-  'J9VEDmCXRM6zZF2DEazGrghSfZoVYMG6P219XjstfAP1'
-);
+import { useAtom } from 'jotai';
+import { receiverWalletAtom } from '@/hooks/useSettings';
 
 export function usePaymentProgram() {
   const { connection } = useConnection();
@@ -20,10 +18,12 @@ export function usePaymentProgram() {
   const provider = useAnchorProvider();
   const transactionToast = useTransactionToast();
   const program = new Program(IDL as Idl, provider);
+  const [receiver] = useAtom(receiverWalletAtom);
 
   const getOwnerBalance = async () => {
+    if (!receiver) return 0;
     try {
-      const balance = await connection.getBalance(RECEIVER_WALLET);
+      const balance = await connection.getBalance(receiver);
       return balance / LAMPORTS_PER_SOL;
     } catch (error) {
       console.error('Error fetching balance:', error);
@@ -34,11 +34,12 @@ export function usePaymentProgram() {
   const processPayment = useMutation({
     mutationKey: ['payment', 'process', { cluster }],
     mutationFn: async (amount: number) => {
+      if (!receiver) throw new Error('Receiver wallet not set');
       return program.methods
         .processPayment(new BN(amount * LAMPORTS_PER_SOL))
         .accounts({
           payer: provider.publicKey,
-          receiver: RECEIVER_WALLET,
+          receiver,
           systemProgram: anchor.web3.SystemProgram.programId,
         })
         .rpc();
@@ -55,5 +56,6 @@ export function usePaymentProgram() {
     program,
     processPayment,
     getOwnerBalance,
+    receiver,
   };
 }

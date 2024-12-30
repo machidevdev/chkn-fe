@@ -5,6 +5,7 @@ import { SolanaProvider } from '@/components/solana/solana-provider';
 import { ClusterProvider } from '@/components/cluster/cluster-data-access';
 import { ReactQueryProvider } from './react-query-provider';
 import { UiLayout } from '@/components/ui/ui-layout';
+import { Toaster } from '@/components/ui/toaster';
 export const metadata: Metadata = {
   title: 'CHKN',
   description: 'CHKN',
@@ -21,6 +22,7 @@ export default function RootLayout({
         <ReactQueryProvider>
           <ClusterProvider>
             <SolanaProvider>
+              <Toaster />
               <UiLayout>{children}</UiLayout>
             </SolanaProvider>
           </ClusterProvider>

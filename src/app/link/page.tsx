@@ -16,7 +16,7 @@ import { useAtom, atom } from 'jotai';
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import { useSearchParams } from 'next/navigation';
-const endpoint = 'https://chkn-indexer-production.up.railway.app/api';
+import { useToast } from '@/hooks/use-toast';
 const otpAtom = atom<string>('');
 const signatureAtom = atom<string | null>(null);
 
@@ -38,9 +38,15 @@ const OtpField = () => {
 };
 
 const SubmitButton = () => {
+  const { toast } = useToast();
+  const [isDisabled, setIsDisabled] = useState(true);
   const wallet = useWallet();
   const [otp] = useAtom(otpAtom);
   const [, setSignature] = useAtom(signatureAtom);
+
+  useEffect(() => {
+    setIsDisabled(!otp || otp.length < 6);
+  }, [otp]);
 
   const handleSubmit = async () => {
     if (!wallet.publicKey || !wallet.signMessage) {
@@ -59,7 +65,7 @@ const SubmitButton = () => {
       const signature = await wallet.signMessage(message);
       setSignature(bs58.encode(signature));
 
-      const response = await fetch(`${endpoint}/otp/verify`, {
+      const response = await fetch('http://localhost:3000/api/link', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -71,19 +77,37 @@ const SubmitButton = () => {
           message: messageText,
         }),
       });
-      const data = await response.json();
+      const { data } = await response.json();
       console.log(data);
       if (data.success) {
-        console.log('Wallet linked successfully');
+        toast({
+          title: 'Wallet linked successfully',
+          description: 'Your wallet has been linked to your Telegram account',
+        });
       } else {
-        console.warn('Failed to link wallet');
+        toast({
+          title: 'Failed to link wallet',
+          description: 'Please try again',
+        });
       }
     } catch (error) {
-      console.warn('Failed to link wallet');
+      toast({
+        title: 'Failed to link wallet',
+        description: 'Please try again',
+      });
     }
   };
 
-  return <Button onClick={() => handleSubmit()}>Submit</Button>;
+  return (
+    <Button
+      disabled={isDisabled}
+      variant="outline"
+      className={` max-w-80 uppercase text-primary ${jetBrainsMono.className}`}
+      onClick={() => handleSubmit()}
+    >
+      Submit
+    </Button>
+  );
 };
 
 export default function Link() {
@@ -115,16 +139,6 @@ export default function Link() {
         sign the transaction using your wallet.
       </div>
 
-      <OtpField />
-      <Button
-        variant="outline"
-        className={` max-w-80 uppercase text-primary ${jetBrainsMono.className}`}
-        onClick={() => {
-          console.log('sign');
-        }}
-      >
-        Sign
-      </Button>
       {!publicKey && <WalletButton />}
       {account.isLoading && <div>Loading...</div>}
       {account.data && (
@@ -153,9 +167,7 @@ export default function Link() {
           {account.data?.user && !account.data.user.telegramId && (
             <div className="flex flex-col gap-4">
               <OtpField />
-              <div className="flex gap-4 max-w-sm">
-                <SubmitButton />
-              </div>
+              <SubmitButton />
             </div>
           )}
         </div>

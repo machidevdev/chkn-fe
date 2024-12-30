@@ -3,19 +3,18 @@
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { ReactNode, Suspense, useEffect, useRef } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
 import { ExplorerLink } from '../cluster/cluster-ui';
 import Navbar from '../Navbar';
-
+import { useToast } from '@/hooks/use-toast';
 export function UiLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-background flex flex-col mx-auto">
+    <div className="min-h-screen bg-background flex flex-col mx-auto w-full">
       <Navbar />
 
       <div className="min-h-screen  bg-tile">
-        <div className="flex-grow mx-4 lg:mx-auto">
+        <div className="flex-grow lg:mx-auto">
           <Suspense
             fallback={
               <div className="text-center my-32">
@@ -25,7 +24,6 @@ export function UiLayout({ children }: { children: ReactNode }) {
           >
             {children}
           </Suspense>
-          <Toaster position="bottom-right" />
         </div>
       </div>
     </div>
@@ -87,16 +85,18 @@ export function AppModal({
 }
 
 export function useTransactionToast() {
+  console.log('useTransactionToast');
+  const { toast } = useToast();
   return (signature: string) => {
-    toast.success(
-      <div className={'text-center'}>
-        <div className="text-lg">Transaction sent</div>
+    toast({
+      title: 'Transaction sent',
+      action: (
         <ExplorerLink
           path={`tx/${signature}`}
           label={'View Transaction'}
           className="btn btn-xs btn-primary"
         />
-      </div>
-    );
+      ),
+    });
   };
 }
