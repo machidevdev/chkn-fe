@@ -25,4 +25,8 @@ pub mod chkn {
     pub fn update_settings(ctx: Context<UpdateSettings>, new_settings: Settings) -> Result<()> {
         instructions::update_settings::update_settings(ctx, new_settings)
     }
+
+    pub fn initialize_pda(ctx: Context<InitializePda>, telegram_id: i64) -> Result<()> {
+        instructions::initialize_pda::initialize_pda(ctx, telegram_id)
+    }
 }

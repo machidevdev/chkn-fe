@@ -8,7 +8,7 @@ async function initializeSettings() {
     const keypair = Keypair.fromSecretKey(Uint8Array.from(config));
     const wallet = new Wallet(keypair);
     const provider = new AnchorProvider(
-        new Connection("https://api.devnet.solana.com"),
+        new Connection("http://127.0.0.1:8899"),
         wallet,
         AnchorProvider.defaultOptions()
     );
@@ -21,20 +21,14 @@ async function initializeSettings() {
 
     try {
         const settings = await program.account.settings.fetch(settingsAccount);
-        console.log("Existing settings found:", {
-            priceIndividualMonthly: settings.priceIndividualMonthly.toNumber() / anchor.web3.LAMPORTS_PER_SOL + " SOL",
-            priceIndividualYearly: settings.priceIndividualYearly.toNumber() / anchor.web3.LAMPORTS_PER_SOL + " SOL",
-            priceGroupMonthly: settings.priceGroupMonthly.toNumber() / anchor.web3.LAMPORTS_PER_SOL + " SOL",
-            priceGroupYearly: settings.priceGroupYearly.toNumber() / anchor.web3.LAMPORTS_PER_SOL + " SOL",
-        });
+        console.log("Settings found:", settings);
     } catch (e) {
-        console.log("No settings found, initializing...");
         await program.methods.initializingSettings().accounts({
             payer: keypair.publicKey,
             systemProgram: SystemProgram.programId,
             settings: settingsAccount,
         }).rpc();
-        console.log("Settings initialized");
+        console.log("Settings initialized with owner:", keypair.publicKey.toString());
     }
 }
 

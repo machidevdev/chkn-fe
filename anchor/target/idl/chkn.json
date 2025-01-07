@@ -8,6 +8,48 @@
   },
   "instructions": [
     {
+      "name": "initialize_pda",
+      "discriminator": [
+        178,
+        254,
+        136,
+        212,
+        127,
+        85,
+        171,
+        210
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "pda",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "telegram_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "telegram_id",
+          "type": "i64"
+        }
+      ]
+    },
+    {
       "name": "initializing_settings",
       "discriminator": [
         29,
@@ -67,37 +109,17 @@
       ],
       "accounts": [
         {
-          "name": "payer",
+          "name": "settings",
+          "writable": true
+        },
+        {
+          "name": "signer",
           "writable": true,
           "signer": true
         },
         {
-          "name": "receiver",
+          "name": "pda",
           "writable": true
-        },
-        {
-          "name": "settings",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  115,
-                  101,
-                  116,
-                  116,
-                  105,
-                  110,
-                  103,
-                  115
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
@@ -153,6 +175,19 @@
         224,
         67,
         173
+      ]
+    },
+    {
+      "name": "TelegramPda",
+      "discriminator": [
+        229,
+        110,
+        214,
+        96,
+        242,
+        24,
+        255,
+        66
       ]
     }
   ],
@@ -222,24 +257,15 @@
           {
             "name": "owner",
             "type": "pubkey"
-          },
-          {
-            "name": "price_individual_monthly",
-            "type": "u64"
-          },
-          {
-            "name": "price_individual_yearly",
-            "type": "u64"
-          },
-          {
-            "name": "price_group_monthly",
-            "type": "u64"
-          },
-          {
-            "name": "price_group_yearly",
-            "type": "u64"
           }
         ]
+      }
+    },
+    {
+      "name": "TelegramPda",
+      "type": {
+        "kind": "struct",
+        "fields": []
       }
     }
   ]

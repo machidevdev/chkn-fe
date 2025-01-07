@@ -14,6 +14,48 @@ export type Chkn = {
   },
   "instructions": [
     {
+      "name": "initializePda",
+      "discriminator": [
+        178,
+        254,
+        136,
+        212,
+        127,
+        85,
+        171,
+        210
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "pda",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "telegramId"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "telegramId",
+          "type": "i64"
+        }
+      ]
+    },
+    {
       "name": "initializingSettings",
       "discriminator": [
         29,
@@ -73,37 +115,17 @@ export type Chkn = {
       ],
       "accounts": [
         {
-          "name": "payer",
+          "name": "settings",
+          "writable": true
+        },
+        {
+          "name": "signer",
           "writable": true,
           "signer": true
         },
         {
-          "name": "receiver",
+          "name": "pda",
           "writable": true
-        },
-        {
-          "name": "settings",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  115,
-                  101,
-                  116,
-                  116,
-                  105,
-                  110,
-                  103,
-                  115
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
@@ -159,6 +181,19 @@ export type Chkn = {
         224,
         67,
         173
+      ]
+    },
+    {
+      "name": "telegramPda",
+      "discriminator": [
+        229,
+        110,
+        214,
+        96,
+        242,
+        24,
+        255,
+        66
       ]
     }
   ],
@@ -228,24 +263,15 @@ export type Chkn = {
           {
             "name": "owner",
             "type": "pubkey"
-          },
-          {
-            "name": "priceIndividualMonthly",
-            "type": "u64"
-          },
-          {
-            "name": "priceIndividualYearly",
-            "type": "u64"
-          },
-          {
-            "name": "priceGroupMonthly",
-            "type": "u64"
-          },
-          {
-            "name": "priceGroupYearly",
-            "type": "u64"
           }
         ]
+      }
+    },
+    {
+      "name": "telegramPda",
+      "type": {
+        "kind": "struct",
+        "fields": []
       }
     }
   ]
