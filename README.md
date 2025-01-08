@@ -92,3 +92,60 @@ Build the web app
 ```shell
 pnpm build
 ```
+
+## To run the whole thing:
+
+- be sure to have solana cli installed and configured to localnet
+- if not, run the following command to install and configure it:
+
+```shell
+sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
+```
+
+- then run the following command to be sure youre in localnet
+
+```shell
+solana config set --url localnet
+```
+
+- run the following command to start the localnet
+
+```shell
+solana-test-validator
+```
+
+if you want to see the logs, run the following command in another terminal:
+
+```shell
+solana logs
+```
+
+Now that we have the localnet running, let's build the contract to see if everything works:
+
+```shell
+pnpm run anchor build
+```
+
+If everything works, you should see a new keypair in the `anchor/target/deploy` directory
+
+if there is a key mismatch, you can run the following command to sync the program id:
+
+```shell
+pnpm run anchor keys sync
+```
+
+This will ensure that the program id is correct and the keypair is synced.
+
+Now that the program is built and the keypair is synced, we can deploy the contract to the localnet:
+
+```shell
+pnpm run anchor deploy
+```
+
+Now that the program is deployed, let's initialize the settings:
+
+```shell
+ts-node src/lib/initSettings.ts
+```
+
+This will make you owner of the settings account. Everything is set!
