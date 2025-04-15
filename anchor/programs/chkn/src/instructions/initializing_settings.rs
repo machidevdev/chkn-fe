@@ -12,6 +12,7 @@ pub fn initializing_settings(ctx: Context<InitializingSettings>) -> Result<()> {
     settings.price_individual_yearly = 10 * LAMPORTS_PER_SOL / 100;
     settings.price_group_monthly = 5 * LAMPORTS_PER_SOL / 100;
     settings.price_group_yearly = 40 * LAMPORTS_PER_SOL / 100;
+    settings.price_per_credit = 10_000_000;
 
     Ok(())
 }

@@ -25,4 +25,8 @@ pub mod chkn {
     pub fn update_settings(ctx: Context<UpdateSettings>, new_settings: Settings) -> Result<()> {
         instructions::update_settings::update_settings(ctx, new_settings)
     }
+    
+    pub fn load_credits(ctx: Context<LoadCredits>, amount: u64) -> Result<()> {
+        instructions::load_credits::load_credits(ctx, amount)
+    }
 }

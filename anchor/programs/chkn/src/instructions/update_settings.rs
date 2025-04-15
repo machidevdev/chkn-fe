@@ -27,6 +27,10 @@ pub fn update_settings(ctx: Context<UpdateSettings>, new_settings: Settings) -> 
     if new_settings.price_group_yearly != settings.price_group_yearly {
         settings.price_group_yearly = new_settings.price_group_yearly;
     }
+    
+    if new_settings.price_per_credit != settings.price_per_credit {
+        settings.price_per_credit = new_settings.price_per_credit;
+    }
 
     Ok(())
 }

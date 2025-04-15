@@ -83,6 +83,7 @@ describe('chkn', () => {
         priceIndividualYearly: new anchor.BN(20 * LAMPORTS_PER_SOL / 100),
         priceGroupMonthly: new anchor.BN(10 * LAMPORTS_PER_SOL / 100),
         priceGroupYearly: new anchor.BN(80 * LAMPORTS_PER_SOL / 100),
+        pricePerCredit: new anchor.BN(10_000_000),
       }
 
       await program.methods
@@ -184,4 +185,42 @@ describe('chkn', () => {
       }
     })
   })
+  it('Loads credits correctly', async () => {
+    const user = Keypair.generate();
+    // Airdrop SOL to user
+    const signature = await provider.connection.requestAirdrop(
+        user.publicKey,
+        LAMPORTS_PER_SOL
+    );
+    await provider.connection.confirmTransaction(signature);
+    await sleep(1000); // Wait for confirmation
+
+    const amount = 20_000_000; // 0.02 SOL
+    const [userCreditsPda] = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('user_credits'), user.publicKey.toBuffer()],
+        program.programId
+    );
+
+    const initialOwnerBalance = await provider.connection.getBalance(newOwner);
+
+    await program.methods
+        .loadCredits(new anchor.BN(amount))
+        .accounts({
+            user: user.publicKey,
+            owner: newOwner, // Use newOwner instead of owner
+            settings: settingsPda,
+            userCredits: userCreditsPda,
+            systemProgram: anchor.web3.SystemProgram.programId,
+        })
+        .signers([user])
+        .rpc();
+
+    await sleep(1000); // Wait for transaction to process
+
+    const userCredits = await program.account.userCredits.fetch(userCreditsPda);
+    assert.strictEqual(userCredits.credits.toString(), '2'); // 20M / 10M = 2
+
+    const finalOwnerBalance = await provider.connection.getBalance(newOwner);
+    assert.strictEqual(finalOwnerBalance - initialOwnerBalance, amount);
+  });
 })

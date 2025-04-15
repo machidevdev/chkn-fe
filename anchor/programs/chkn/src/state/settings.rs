@@ -7,6 +7,7 @@ pub struct Settings {
     pub price_individual_yearly: u64,
     pub price_group_monthly: u64,
     pub price_group_yearly: u64,
+    pub price_per_credit: u64,
 }
 
 impl Settings {

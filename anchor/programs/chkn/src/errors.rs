@@ -10,4 +10,8 @@ pub enum ErrorCode {
     TransferFailed,
     #[msg("Not owner")]
     NotOwner,
+    #[msg("Price per credit cannot be zero")]
+    PricePerCreditZero,
+    #[msg("Invalid user for credits account")]
+    InvalidUser,
 }
